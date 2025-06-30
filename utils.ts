@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 
-function getInstructions(fileName) {
+function getInstructions(fileName: string) {
   const schemaPath = path.join(__dirname, "schemas", fileName)
   return fs.readFileSync(schemaPath, "utf8")
 }

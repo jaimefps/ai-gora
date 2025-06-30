@@ -2,14 +2,14 @@
 If the moderator or a persona are sent a message, where they are only
 being asked to acknowledge the message sent by the controller.
 */
-const ack = "ACK"
+export const ack = "ACK"
 
 /*
 Used to summarize the forum's discussion so far and applying a name to each summary such that 
 the personas can vote based on a thesis name. A thesis might have multiple authors if we find
 that multiple personas collaborate on ideas throughout the discussion process.
  */
-const summary = {
+export const summary = {
   ideas: [
     {
       thesis: "string",
@@ -48,7 +48,7 @@ HIGH_AGREEABLENESS =
 all personas converging on same answer without real debate when their respective
 system prompts suggest they shouldn't easily agree considering their differences.
 */
-const warnings =
+export const warnings =
   [
     {
       type:
@@ -60,4 +60,4 @@ const warnings =
         "HIGH_AGREEABLENESS",
       description: "string",
     },
-  ] | null
+  ] || null
