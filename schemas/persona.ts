@@ -14,9 +14,10 @@ export const ThesisSchema = z.object({
 
 export const VoteSchema = z.object({
   secret_thoughts: z.string(),
-  // The name of a summarized thesis. Can be set to null to abstain from
-  // voting if the persona feels that none of the ideas are good enough.
-  thesis_name: z.string().nullable(),
+  // The vote_id of a summarized thesis provided in the list of summaries. Can be null to abstain
+  // from voting if you believe that none of the ideas are good enough. If voting, you must
+  // only use one of the provided vote_ids from the summary; e.g., 1, 2, 3, etc
+  vote_id: z.number().nullable(),
 })
 
 // Export types
