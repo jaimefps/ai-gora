@@ -116,10 +116,16 @@ userBots.forEach(addPersona)
 
 type ConvoEvent =
   | {
-      speaker: string
+      type: "Conclusion"
+      counter: {
+        [k: string]: number
+      }
+    }
+  | {
       type: "AwaitingResponse"
       waitingOn: keyof typeof schemas
       timestamp: number
+      speaker: string
     }
   | {
       [K in keyof typeof schemas]: {
@@ -304,6 +310,41 @@ Promise.all([
       callBot("Pragmatist", "VoteSchema"),
     ])
   })
+  // todo: fix
+  // .then(() => {
+  //   const absKey = Symbol("abstain")
+
+  //   const counter: Record<string | typeof absKey, number> = {
+  //     [absKey]: 0,
+  //   }
+
+  //   const ideas =
+  //     convo.find((entry) => {
+  //       return entry.type === "SummarySchema"
+  //     })?.payload.ideas ?? []
+
+  //   const votes = convo
+  //     .filter((entry) => {
+  //       return entry.type === "VoteSchema"
+  //     })
+  //     .map((vote) => {
+  //       // @ts-ignore
+  //       return ideas.find((i) => i.vote_id === vote)?.thesis_name ?? null
+  //     })
+
+  //   votes.forEach((v) => {
+  //     if (v === null) {
+  //       counter[absKey] += 1
+  //     } else {
+  //       counter[v] = (counter[v] ?? 0) + 1
+  //     }
+  //   })
+
+  //   convo.push({
+  //     type: "Conclusion",
+  //     counter,
+  //   })
+  // })
   .then(() => {
     const state = JSON.stringify(convo, null, 2)
     fs.writeFileSync("sample.txt", state)
