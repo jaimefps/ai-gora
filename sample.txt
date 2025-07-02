@@ -2,170 +2,170 @@
   {
     "speaker": "Moderator",
     "type": "AwaitingResponse",
-    "timestamp": 1751393430665,
+    "timestamp": 1751488806802,
     "waitingOn": "AckSchema"
   },
   {
     "speaker": "Skeptic",
     "type": "AwaitingResponse",
-    "timestamp": 1751393430665,
+    "timestamp": 1751488806802,
     "waitingOn": "AckSchema"
   },
   {
     "speaker": "Optimist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393430665,
+    "timestamp": 1751488806802,
     "waitingOn": "AckSchema"
   },
   {
     "speaker": "Pragmatist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393430665,
+    "timestamp": 1751488806802,
     "waitingOn": "AckSchema"
   },
   {
     "type": "AckSchema",
+    "speaker": "Pragmatist",
+    "timestamp": 1751488807707,
+    "payload": "ACK"
+  },
+  {
+    "type": "AckSchema",
     "speaker": "Skeptic",
-    "timestamp": 1751393431509,
+    "timestamp": 1751488807873,
     "payload": "ACK"
   },
   {
     "type": "AckSchema",
     "speaker": "Optimist",
-    "timestamp": 1751393431510,
+    "timestamp": 1751488807912,
     "payload": "ACK"
   },
   {
     "type": "AckSchema",
-    "speaker": "Pragmatist",
-    "timestamp": 1751393431510,
-    "payload": "ACK"
-  },
-  {
-    "type": "AckSchema",
-    "timestamp": 1751393431753,
+    "timestamp": 1751488808227,
     "payload": "ACK"
   },
   {
     "speaker": "Skeptic",
     "type": "AwaitingResponse",
-    "timestamp": 1751393431754,
+    "timestamp": 1751488808227,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Skeptic",
-    "timestamp": 1751393438350,
+    "timestamp": 1751488814683,
     "payload": {
-      "secret_thoughts": "People always jump to say 'learn Python' because it's beginner-friendly and has lots of resources, but that's a lazy answer. The 'best' language totally depends on what part of software engineering you want to break into—web dev? Game dev? Systems? For backend, Java/C# still dominate in a ton of enterprise shops; for web, JavaScript is impossible to avoid; for startups, Python and JavaScript might be king. Also, 'just start coding' is terrible advice—if you want a job, you need to know what jobs are out there! You can't ignore market demand, ecosystem, and what companies are actually using. Focusing on one popular language (like Python) might get your foot in the door for some roles, but it pigeonholes you for others. Plus, language isn't everything; tooling, frameworks, and CS fundamentals matter more.",
-      "public_response": "Honestly, forget the blanket advice that 'Python is the best language to learn.' That's just herd mentality. The best programming language to pick depends on what specific area of software engineering you're after. If you want to do web dev, you'll regret not learning JavaScript—it's unavoidable. Backend? Java and C# are still everywhere in the real world, especially in bigger companies. Startups move fast with Python or JavaScript, yeah, but that won't help you when a job opening requires .NET or Spring. If you just pick a language based on what's 'popular' or 'easy,' you risk wasting time and missing out on jobs you actually want. Do some market research, figure out what companies near you want, and learn the language they use. That's how you break in, not by following generic advice."
+      "secret_thoughts": "Honestly, this prompt is so shallow and generic that any answer risks oversimplifying or just repeating whatever's trendy. The 'best' language? There's no such thing—context is king. Job market changes constantly, companies care more about fundamentals, and you can get pigeonholed if you just chase the most in-demand language. People look at the lists and pick Python or JavaScript, but skip asking what kind of work they want to do (web, systems, data?), what industries interest them, or what companies are hiring locally. Also, recruiters pretend to care about specific languages, but then hire the candidates with actual coding ability, not just language trivia. New devs waste too much time obsessing over the 'right' language instead of just building shit and learning how to think like a developer. Still, I'll push a critical answer that calls out this trap.",
+      "public_response": "Frankly, obsessing over 'the best' programming language is a rookie mistake. The whole industry is built on shifting fads—one year it's Python, the next it's Rust, then suddenly everyone wants Go. If you pick a language just because it's hot today, you'll be outdated tomorrow. What actually matters is understanding the fundamentals of programming, and then picking a language that matches the kind of jobs you want, or even better, the kind of projects you want to build. Build a portfolio with any commonly used language—could be Python, JavaScript, Java, C#, whatever. The key is to get really good at problem-solving and to actually ship stuff. Tools change, but thinking like an engineer is what gets you hired. Don't fall for the hype; think critically about your goals and do your own homework."
     }
   },
   {
     "speaker": "Optimist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393438350,
+    "timestamp": 1751488814683,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Optimist",
-    "timestamp": 1751393443140,
+    "timestamp": 1751488820209,
     "payload": {
-      "secret_thoughts": "Skeptic has a point that not all companies work in Python, and different fields do demand different languages. But their stance is almost defeatist and ignores how learning one language actually sets you up to learn others faster! I want to highlight how starting with Python isn't about following the herd but about maximizing your ramp-up and flexibility, and that too much market-research paralysis just stalls beginners.",
-      "public_response": "Market research has its place, sure, but being paralyzed by what every company wants leads nowhere—especially as a beginner. Python isn't just some 'herd mentality' pick: it's a gateway language. It's readable, versatile, and way less frustrating for folks just starting out, so you actually stick with it long enough to build real skills. Once you get solid at programming concepts with Python, picking up Java, C#, or even JavaScript later is way easier. Most companies aren't looking for a one-language pony, they're looking for people who can learn and adapt. So why not start with the language that gets you building, motivated, and ready to pivot when you spot those hot job openings? Python does that. The key is don't let endless research drain your momentum—jump in, get that foundation, then specialize."
+      "secret_thoughts": "Skeptic raises a strong point about fundamentals, but that's almost too safe and generic to be actionable. People asking about the 'best' language often want direction, not just meta-advice. There's optimism in suggesting fundamentals, but it borders on non-committal. Let's push this forward: Instead of paralyzing newbies with 'it depends,' let's pick a language that balances beginner-friendliness, versatility, and real-world demand. Python is still the king here—massive job market, huge community, usable for web, data, AI, scripting, even certain kinds of app dev. It's not about chasing hype, it's about momentum and opportunity, both of which Python has in spades. Encouraging people to focus only on meta-skills and ignore market realities could actually make their entry harder.",
+      "public_response": "I get that fundamentals are important, and yeah, tools change. But telling someone to just 'learn the basics' without actually picking a starting point leaves them spinning their wheels. If you actually want a shot at jobs and projects now, start with Python. It's easy to learn, has a ton of practical uses, and employers are always looking for it. You can branch out later, but landing that first job or getting those portfolio projects done is a lot easier if you don't try to be a generalist from day one. Python opens the most doors—simple as that."
     }
   },
   {
     "speaker": "Pragmatist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393443140,
+    "timestamp": 1751488820209,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Pragmatist",
-    "timestamp": 1751393450021,
+    "timestamp": 1751488827168,
     "payload": {
-      "secret_thoughts": "Both arguments are missing how resource constraints, hiring practices, and realistic ramp-up for beginners play a crucial role. If someone genuinely wants to break into software engineering and not waste time, the focus shouldn't be just on language preferences or trends, but on what maximizes employability with the least friction. Market research is important, but it can be a stall tactic for people new to the industry. At the same time, learning Python only for 'easy start' is short-sighted if all the regional jobs require Java or C#. I need to argue for a pragmatic approach: target the intersection of accessible learning resources, actual local/company demand, and a language's transferability to new domains. That means: do quick, targeted market research—literally check job boards in your area or remote, filter entry-level positions, list the language requirements, and see what comes up most. Then pick from that small list, starting with languages that also have low-friction onboarding (docs, community, tooling, etc). It's not about Python vs JavaScript vs Java—it's about the data and getting in the door with the least wasted effort.",
-      "public_response": "Let's get real: none of this matters if you end up learning a language that's dead for jobs in your area or one that's so hard to get started with that you quit after two weeks. You want a pragmatic path? Do this: 1) Spend one hour tops looking at *actual entry-level job postings* where you want to work (remote or local), and write down the top two or three languages listed. 2) See which ones have the most beginner-friendly resources—think clear docs and tons of tutorials. 3) Pick that overlap and go hard. No pointless market paralysis, no falling for flavor-of-the-month trends—just raw, targeted practicality. Don't obsess over 'what ifs'; obsess over getting interview-ready in one language that actually opens doors for you. That’s how you break in without wasting time."
+      "secret_thoughts": "Both points have some merit, but they're ignoring the practical constraints people face. Telling beginners 'just learn fundamentals and pick any language' is uselessly vague—newcomers need direction. Likewise, pushing Python as a silver bullet isn't realistic—hiring trends vary by region, industry, and company size. What matters is coordinating your learning with actual job postings. It's not about the 'best' universal language, but picking one that's in active demand where you live or hope to work. You should look up job boards in your area, see which languages come up the most (often JavaScript for web, Java or C# for enterprise, Python for data roles), and pick from the top two. Then, build a couple solid portfolio pieces—doesn't matter if they're flashy, just that they work. Focus on that, because no one gets hired based on theory or hype, only on real, demonstrable skills.",
+      "public_response": "Both of you are missing the pragmatic angle. Beginners desperately need actual direction, not hand-wavy advice or hype-building. The real move is to research local job postings, figure out which languages are most wanted by actual employers where you want to work, and pick from the top one or two. Python might be the answer—but in a lot of regions or industries, it could be Java, JavaScript, or C#. Instead of guessing, just go look it up. And then don't just learn the basics—build real, working stuff with that language, because that's the only thing that actually proves you can do the job. Nobody gets hired for being a theory wizard. Nobody gets hired for following fads. They get hired for proven, practical skills in what employers actually need right now."
     }
   },
   {
     "speaker": "Skeptic",
     "type": "AwaitingResponse",
-    "timestamp": 1751393450022,
+    "timestamp": 1751488827168,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Skeptic",
-    "timestamp": 1751393455968,
+    "timestamp": 1751488835156,
     "payload": {
-      "secret_thoughts": "Both Optimist and Pragmatist are pushing weak, oversimplified solutions. Optimist overstates how much a 'beginner-friendly' language helps—sure, Python is readable, but it hand-holds a lot, so people learn sloppy habits and then hit a wall when jumping into statically typed, more verbose languages like Java or C#. As for Pragmatist's single-hour of market research idea, that's barely scratching the surface and totally ignores that job ads aren't always accurate about what's important. My critique holds: the only serious way to break in is to be laser-focused on your actual market (not just what’s trending); learn what companies are genuinely using, not what courses or single job ads claim. Anything else is setting you up for rude awakenings in real interviews.",
-      "public_response": "Look, you can't shortcut this with hand-wavy 'just learn Python' advice, and you definitely can't rely on skimpy market research—one hour isn't enough to understand what companies actually want, especially with how misleading job ads can be. Python might be comfy, but it doesn't prepare you for everything, and companies care about real world tech stacks, not just what you picked up easily. You want to break in? Go deep: talk to engineers, recruiters, check multiple job boards over time, and see tech stacks in open source projects in your region or industry. Build with what's actually in use, not just what's 'friendly.' Anything less and you're wasting time and setting yourself up for nasty surprises down the road."
+      "secret_thoughts": "The Optimist and Pragmatist both make a decent attempt at narrowing the focus, but they're still glossing over a giant pitfall: the market is volatile and local trends can shift rapidly, especially for entry-level roles. Even if you zero in on the 'top' language from job listings, you're likely to get a distorted picture, because a lot of postings ask for wish lists rather than real requirements. Plus, some languages—like Java or C#—might dominate traditional companies, but if startups or remote-first roles are your goal, it's going to look very different. And 'just build real projects' doesn't address the fact that companies often filter with unrealistic expectations. It's a game where you can follow the script exactly and still miss the mark because the rules get rewritten all the time. The industry loves to sell the 'one simple trick,' but it's a mirage. We need more hard-headed realism, not yet another recycled answer.",
+      "public_response": "Here's what everyone keeps missing: 'trending' languages and local job data only tell you half the story. Job postings are often wish lists designed by HR, not reflections of day-to-day work. Today's in-demand tech is tomorrow's punchline—just look at what's happened to Ruby on Rails or Perl. More importantly, unless you're trying to work at the same boring corporate shops that always want Java, what you really need is adaptability—a relentless willingness to pick up whatever gets the project done, not false hope that picking Python or JavaScript will guarantee your break. If you want to make yourself employable, be the person who learns fundamentals fast and shows you can learn any language a job needs, even if it's unsexy. That's how you future-proof your career, not by worshipping the current flavor of the month."
     }
   },
   {
     "speaker": "Optimist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393455968,
+    "timestamp": 1751488835156,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Optimist",
-    "timestamp": 1751393467127,
+    "timestamp": 1751488840919,
     "payload": {
-      "secret_thoughts": "Skeptic’s got a point about targeting what’s actually used, but they’re underestimating how demotivating and brutal it is for newbies to jump straight to C# or Java without first understanding the basics, let alone struggling with verbose syntax and enterprise-level frameworks. Also, this weird anxiety about 'wasting time' with Python is overblown—most of the foundational programming skills transfer just fine, and tech keeps evolving anyway. But Pragmatist’s ultra-narrow approach feels too robotic; it makes learning sound like shopping for frozen meals—quick, but not exactly nourishing or inspiring. There’s opportunity in building on Python’s fast feedback loop, getting into open source, and then specializing based on real experience. That builds confidence and momentum (which beginners need), and ultimately pays off in adaptability. I need to show how momentum, versatility, and ease of entry are force multipliers—they help you *finish* what you start, not just pick a random tech from a job board.",
-      "public_response": "All this hyper-analysis about job ads and tech stacks sounds great until you actually try to break in as a total beginner and get completely lost or give up in frustration. Here’s what always works: pick a language that gets you building quick, keeps you interested, and is respected *enough* to pivot later. That’s Python, hands down. You want momentum more than perfect alignment—because sticking with it and finishing projects gets you interviews far faster than floundering with an 'in demand' language you resent. Skills carry across languages, and by the time you’ve got confidence, you’ll actually *understand* what employers need. Don’t stall out researching yourself into a corner. Get building, get good, and then specialize. That’s the only path that’s future-proof."
+      "secret_thoughts": "They're all right in some way, but they're overcomplicating it for beginners. Most people asking this question don't want an existential discussion—they want to know where to start without wasting months researching job boards or getting lost in theory. Python is a shortcut to results: you can make real stuff, it's everywhere (web, data science, scripting), and you don't get bogged down in weird syntax or complicated setups. Fundamentals are essential, but you actually get those faster by writing code and finishing projects, not just reading theory. Picking Python doesn't box you in–it gives you momentum. Once you've built some things in Python, you actually *see* what the fundamentals are. That's empowering and gives you the confidence to pick up other languages later. The fastest, most optimistic path to breaking in is to pick Python, build things, and let that hands-on experience guide your next steps.",
+      "public_response": "You guys are making this way harder than it needs to be for beginners. People breaking into the industry need clarity, not endless debates about trends or theory. Start with Python. It's the most practical, beginner-friendly entry point out there. You can build real stuff fast so your portfolio doesn’t look empty. And honestly, real programming fundamentals click a lot faster when you ship projects instead of overthinking language choice. Once you get some wins under your belt with Python, picking up other languages is a breeze. If you want the fastest way in, don’t get lost chasing fads or overanalyzing job boards—just pick Python, get good, and build stuff. The rest falls into place."
     }
   },
   {
     "speaker": "Pragmatist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393467127,
+    "timestamp": 1751488840919,
     "waitingOn": "ThesisSchema"
   },
   {
     "type": "ThesisSchema",
     "speaker": "Pragmatist",
-    "timestamp": 1751393475415,
+    "timestamp": 1751488846933,
     "payload": {
-      "secret_thoughts": "Both the Skeptic and Optimist are too absolutist. Skeptic expects beginners to act like miniature hiring analysts and deep-researchers before they can even code—totally impractical, because you don’t know what you don’t know. But the Optimist goes the opposite way and basically says 'just have fun and the rest will follow', which works only if you don’t care about hitting real-world job markets fast. My position is the only one that meaningfully balances reality—if you can’t even land an interview because nobody’s hiring for your language in your region or for remote newbies, you’re wasting your time, period. But if you pick something stupidly hard (like jumping into pure C or C++ as a first-timer), or something obscure, you’ll probably drop out before you get anywhere. The answer is to do focused, quick research, then pick the most accessible language that gets you hired locally or remotely ASAP. That’s how you actually get in.",
-      "public_response": "Both the 'follow your passion with Python' crowd and the 'deep-dive into job market analysis' crowd are missing the point. You want results, not theoretical bests. Do a focused search—scroll major job boards for your target market, look at what real jobs for juniors actually demand, then see which of those in-demand languages have the most accessible learning resources for beginners. Pick the sweet spot: most practical, most likely to land interviews, least likely to overwhelm you out the gate. That saves you from picking something useless *and* from overthinking yourself into paralysis. Pragmatism beats idealism every time when you actually want a job."
+      "secret_thoughts": "Everyone's repeating the same tired arguments, but nobody is really grappling with the obstacles beginners face: confusion from noise, time constraints, and limited energy to second-guess every step. The Skeptic talks a big game about adaptability, but how does a beginner show adaptability on a resume? The 'start with Python' crowd are right that you need more than just theoretical skills, but they ignore actual market diversity. The only answer that scales across geographies and industries is to target what employers are literally hiring for—pick a top demanded language in your market, not the one that's hyped or allegedly universal. It's cold, it's practical, and it works. Portfolio projects in Python are useless if all the jobs in your area require Java, C#, or JavaScript. Ignoring that is malpractice.",
+      "public_response": "Look, hand-waving about fundamentals and adaptability is great if you're preaching to seasoned devs. But for a beginner who needs to get hired ASAP, this isn't a philosophy seminar—it's an economic problem. You don't get a paycheck for being 'flexible with any language' if you've got zero experience in the ones employers are demanding. The right move is dead simple: check your local job listings, see which languages are showing up the most, pick the top one or two, and go all-in. Stack your portfolio with working projects in exactly those languages. If that's Python, perfect—but if it's Java, C#, or JavaScript in your area, Python projects are a waste of time. Optimize for what's in demand, not what sounds universal on Hacker News. That's how you break in—and stay in."
     }
   },
   {
     "speaker": "Moderator",
     "type": "AwaitingResponse",
-    "timestamp": 1751393475415,
+    "timestamp": 1751488846933,
     "waitingOn": "SummarySchema"
   },
   {
     "type": "SummarySchema",
-    "timestamp": 1751393485043,
+    "timestamp": 1751488852566,
     "payload": {
       "ideas": [
         {
-          "thesis_body": "The best programming language to learn to break into the software engineering industry is highly context-dependent. It is essential to conduct detailed market research focused on your region and desired job roles. Following generic or popular advice (like 'just learn Python') risks wasting time if the jobs you seek require other languages such as Java, C#, or JavaScript. Instead, align your language choice with industry demand and real-world tech stacks that local employers use.",
-          "thesis_name": "Market-Driven Language Selection",
+          "thesis_body": "The programming language you pick doesn't matter nearly as much as understanding core programming fundamentals and building real projects. Language trends come and go; what stays valuable is critical thinking and adaptability. Get really good at one tool, but focus on problem-solving and proof of actual work done.",
+          "thesis_name": "Fundamentals-and-Adaptability First",
           "authors": [
             "Skeptic"
           ],
           "vote_id": 1
         },
         {
-          "thesis_body": "For absolute beginners, starting with an easy-to-learn, readable, and versatile language like Python offers the best foundation. Python lowers the barrier to entry, keeps newcomers motivated, and equips them with transferable programming concepts that make learning other languages easier later. The priority should be building confidence and actual projects first—specialization and targeting industry-specific tech stacks can come after establishing a solid programming foundation.",
-          "thesis_name": "Foundation-First Python Approach",
+          "thesis_body": "For beginners, start with Python: it's beginner-friendly, highly practical, widely in demand, and lets you build a portfolio quickly. Ship projects, learn by doing, and branch out to other languages after you have momentum. Don't overcomplicate—start simple for the fastest entry into the industry.",
+          "thesis_name": "Start with Python for Practical Entry",
           "authors": [
             "Optimist"
           ],
           "vote_id": 2
         },
         {
-          "thesis_body": "The best approach balances practicality and accessibility. Quickly research actual job postings for entry-level roles in your target region, identify the most commonly required languages, and choose one that also has abundant beginner resources. This targeted strategy avoids overthinking and ensures you learn something both in demand and accessible, improving your odds of landing a job without wasting time on unnecessary analysis or choosing overly difficult languages.",
-          "thesis_name": "Pragmatic Overlap Strategy",
+          "thesis_body": "Ignore global trends and general advice: instead, research local or target job markets to see which languages are actually in demand nearby. Choose from the top one or two, and focus on building substantial, working projects in those. Directly optimize for employability based on your real-world context, not hype or broad claims.",
+          "thesis_name": "Market-Driven Language Selection",
           "authors": [
             "Pragmatist"
           ],
@@ -177,46 +177,46 @@
   {
     "speaker": "Skeptic",
     "type": "AwaitingResponse",
-    "timestamp": 1751393485043,
+    "timestamp": 1751488852567,
     "waitingOn": "VoteSchema"
   },
   {
     "speaker": "Optimist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393485043,
+    "timestamp": 1751488852567,
     "waitingOn": "VoteSchema"
   },
   {
     "speaker": "Pragmatist",
     "type": "AwaitingResponse",
-    "timestamp": 1751393485043,
+    "timestamp": 1751488852567,
     "waitingOn": "VoteSchema"
-  },
-  {
-    "type": "VoteSchema",
-    "speaker": "Optimist",
-    "timestamp": 1751393487602,
-    "payload": {
-      "secret_thoughts": "Honestly, while the other points aren’t wrong—especially about checking job postings—the Optimist thesis is the only one that prioritizes actual momentum for beginners. It's ridiculously common for people to get stuck endlessly comparing languages or burning out on something 'in demand' that makes them miserable. Starting with Python gets people shipping projects, building real skills, and keeps motivation alive. The ability to pivot after is underrated. That's how people break in for real—by building, not by agonizing for weeks over tech stacks they're years away from mastering. So that gets my vote.",
-      "vote_id": 2
-    }
-  },
-  {
-    "type": "VoteSchema",
-    "speaker": "Pragmatist",
-    "timestamp": 1751393488009,
-    "payload": {
-      "secret_thoughts": "Assuming the summary contained proper vote_id's and based on the debate above, my position stands squarely on hard pragmatism: Don't blindly pick a language based on popularity or ease (Python bias) OR drown yourself in endless market analysis that wastes time and motivation. The comprehensive path is to scan real entry-level job postings in the intended area, see which languages are actually in demand, cross-check that with how approachable they are for newcomers (documentation, community, learning resources), and then laser-target that overlap. The approach is about minimizing wasted effort and maximizing your shot at breaking in fast. If the summary mapped my thesis to, say, vote_id 3, that's the right vote.",
-      "vote_id": 3
-    }
   },
   {
     "type": "VoteSchema",
     "speaker": "Skeptic",
-    "timestamp": 1751393489239,
+    "timestamp": 1751488854100,
     "payload": {
-      "secret_thoughts": "The Optimist's approach of 'just start with Python, skills will transfer, figure out specifics later' totally ignores the harsh reality that the entry-level job market is far from forgiving to generalists. The Pragmatist seems closer to good advice—at least they're saying to match real demand with accessibility for learning. But their 'one hour' suggestion for market research is weak; tech stacks and demand shift constantly, and job ads aren't even always accurate about what's expected on the job. Realistically, nobody gives you a job for being a dabbler in the most popular language of the month; they want people ready to work with their stack. My own advice still beats both: Go deeper, talk to people actually working in the field, browse repos, stay updated on local and industry-specific trends. Still, between what's here, Pragmatist is the least bad—at least if you target demand with your learning, you won't waste months on irrelevancies.",
+      "secret_thoughts": "This is a flawed set of choices since the vote IDs are not present, only '[object Object]'. Normally, I'd need an explicit list of summary ideas mapped to numbers (1, 2, 3, etc.). Without valid vote_ids, I cannot meaningfully vote.",
+      "vote_id": null
+    }
+  },
+  {
+    "type": "VoteSchema",
+    "speaker": "Pragmatist",
+    "timestamp": 1751488854511,
+    "payload": {
+      "secret_thoughts": "All the mumbo jumbo about being adaptable or betting on the hottest language doesn't help someone who just needs a job. Most people can't relocate across the world or gamble months learning tech nobody is hiring for in their city. The practical solution is to look up real job data and target what's listed, because that’s how you get callbacks. Everything else is philosophical fluff. The only sensible answer is mine.",
       "vote_id": 3
+    }
+  },
+  {
+    "type": "VoteSchema",
+    "speaker": "Optimist",
+    "timestamp": 1751488855944,
+    "payload": {
+      "secret_thoughts": "Looking over the thread, the practical angle—advising people to research local job demand and pick the in-demand language—definitely has merit, but it honestly risks paralyzing beginners with indecision or sending them down a local maximum rabbit hole. Skeptic's obsession with fundamentals is true long-term, but completely misses the whole psychological need for a beginner to see real progress fast. Python is simply the path of least resistance AND biggest upside for getting traction, landing interviews, and feeling like you're actually building something useful. Picking Python isn't about chasing a fad, it's about unlocking a huge number of opportunities without getting bogged down—then if your area, your employer, or your heart steers you elsewhere, it's way easier to pivot with a solid foundation and stuff you can actually show off.",
+      "vote_id": 2
     }
   }
 ]

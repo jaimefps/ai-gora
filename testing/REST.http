@@ -1,0 +1,27 @@
+# GET http://localhost:8080/threads HTTP/1.1
+# content-type: application/json
+
+# POST http://localhost:8080/threads HTTP/1.1
+# content-type: application/json
+
+# {
+#     "personas": [123],
+#     "topic":"test"
+# }
+
+# DELETE http://localhost:8080/threads/1751488032160 HTTP/1.1
+# content-type: application/json
+
+# GET http://localhost:8080/personas HTTP/1.1
+# content-type: application/json
+
+# POST http://localhost:8080/personas HTTP/1.1
+# content-type: application/json
+
+# {
+#     "name": "name_here",
+#     "prompt":"prompt_here"
+# }
+
+# DELETE http://localhost:8080/personas/1751488032160 HTTP/1.1
+# content-type: application/json
