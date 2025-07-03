@@ -114,7 +114,7 @@ function addPersona({
 
 userBots.forEach(addPersona)
 
-type ConvoEvent =
+type StreamItem =
   | {
       type: "Conclusion"
       counter: {
@@ -137,7 +137,7 @@ type ConvoEvent =
     }[keyof typeof schemas]
 
 // global state:
-const convo: ConvoEvent[] = []
+const convo: StreamItem[] = []
 
 function formatThread() {
   return (
@@ -310,41 +310,6 @@ Promise.all([
       callBot("Pragmatist", "VoteSchema"),
     ])
   })
-  // todo: fix
-  // .then(() => {
-  //   const absKey = Symbol("abstain")
-
-  //   const counter: Record<string | typeof absKey, number> = {
-  //     [absKey]: 0,
-  //   }
-
-  //   const ideas =
-  //     convo.find((entry) => {
-  //       return entry.type === "SummarySchema"
-  //     })?.payload.ideas ?? []
-
-  //   const votes = convo
-  //     .filter((entry) => {
-  //       return entry.type === "VoteSchema"
-  //     })
-  //     .map((vote) => {
-  //       // @ts-ignore
-  //       return ideas.find((i) => i.vote_id === vote)?.thesis_name ?? null
-  //     })
-
-  //   votes.forEach((v) => {
-  //     if (v === null) {
-  //       counter[absKey] += 1
-  //     } else {
-  //       counter[v] = (counter[v] ?? 0) + 1
-  //     }
-  //   })
-
-  //   convo.push({
-  //     type: "Conclusion",
-  //     counter,
-  //   })
-  // })
   .then(() => {
     const state = JSON.stringify(convo, null, 2)
     fs.writeFileSync("sample.txt", state)

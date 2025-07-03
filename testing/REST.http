@@ -25,3 +25,10 @@
 
 # DELETE http://localhost:8080/personas/1751488032160 HTTP/1.1
 # content-type: application/json
+
+# POST http://localhost:8080/expansions HTTP/1.1
+# content-type: application/json
+
+# {
+#     "profile":"you are an angry child"
+# }
