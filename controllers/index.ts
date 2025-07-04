@@ -166,6 +166,7 @@ const live = new Set<string>()
 const breaks = new Set<StreamEvent["type"]>()
 breaks.add("PauseMarker")
 breaks.add("ErrorMarker")
+breaks.add("VoteSchema")
 
 /**
  * Calls done in parallel;
@@ -206,6 +207,14 @@ export const provider = {
   // async gemini() {},
 }
 
+function saveThread(threadId: string, folder: "dump_results" | "dump_errors") {
+  const t = store.threads[threadId]
+  const dir = path.join(__dirname, `../${folder}`)
+  const file = path.join(dir, `${Date.now()}.json`)
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(file, JSON.stringify(t, null, 2))
+}
+
 // `never` informs TS that this function throws:
 function crash(threadId: string, msg: string): never {
   const t = store.threads[threadId]
@@ -216,10 +225,7 @@ function crash(threadId: string, msg: string): never {
     timestamp: Date.now(),
     message: str,
   })
-  const dir = path.join(__dirname, "../errors")
-  const file = path.join(dir, `${threadId}_${Date.now()}_failed.txt`)
-  fs.mkdirSync(dir, { recursive: true })
-  fs.writeFileSync(file, JSON.stringify(t, null, 2))
+  saveThread(threadId, "dump_errors")
   throw new Error(str)
 }
 
@@ -255,12 +261,19 @@ const format = {
     const t = store.threads[threadId]
     const summary = t.stream.find((evt) => evt.type === "SummarySchema")
     if (!summary) crash(threadId, "Failed to find summary")
-    summary.payload.ideas.forEach((item, idx) => {
-      // @ts-ignore: we force a new field
-      // for the bots to know how to vote.
-      item.vote_id = idx + 1
-    })
-    return summary
+
+    const redacted = JSON.stringify(
+      summary.payload.ideas.map((idea, idx) => {
+        // @ts-ignore: we force a new field
+        // for the bots to know how to vote.
+        idea.vote_id = idx + 1
+        return idea
+      }),
+      null,
+      2
+    )
+
+    return redacted
   },
   // not needed for demo:
   votes(threadId: string) {
@@ -400,6 +413,8 @@ function halt(threadId: string) {
 
   // fallback to Pause to avoid infinite loops:
   if (breaks.has(last?.type ?? "PauseMarker")) {
+    console.log("-- Halting & Dumping --")
+    saveThread(threadId, "dump_results")
     live.delete(threadId)
     return true
   }
@@ -428,7 +443,7 @@ function getOp(threadId: string): SchemaName {
   ) {
     return "VoteSchema"
   }
-  crash(threadId, `Failed to get operation: ${threadId}`)
+  crash(threadId, `Failed to get operation at: ${threadId}`)
 }
 
 function getSys(botId: string | typeof modKey, topic: string) {
@@ -463,9 +478,12 @@ async function call(threadId: string) {
   const op = getOp(threadId)
   const botIds = getBotIds(threadId, op)
 
+  console.log("-- calling --", { op, botIds })
+
   const calls = botIds.map(async (botId) => {
     const t = store.threads[threadId]
 
+    console.log("-- load marker --")
     t.stream.push({
       type: "LoadMarker",
       timestamp: Date.now(),
@@ -496,6 +514,7 @@ async function call(threadId: string) {
       return
     }
 
+    console.log("-- payload added --")
     t.stream.push({
       type: op,
       sourceId: botId,

@@ -6,16 +6,12 @@ import helmet from "helmet"
 import express from "express"
 import cors from "cors"
 
-// CONFIG
-
 const app = express()
 const PORT = process.env.PORT ?? 8080
 
 app.use(helmet())
 app.use(cors())
 app.use(express.json())
-
-// THREADS
 
 app.get("/threads", (req, res) => {
   try {
@@ -213,23 +209,26 @@ app.put("/personas/:personaId", (req, res) => {
   }
 })
 
-app.delete("/personas/:personaId", (req, res) => {
-  try {
-    const { personaId } = req.params
-    const p = store.personas[personaId]
-    if (!p) {
-      res.sendStatus(400)
-      return
-    }
-    delete store.personas[personaId]
-    res.json({ msg: "OK" })
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-  }
-})
-
-// UTILS
+/**
+ * Eventually enable,
+ * not necessary for demo.
+ *
+ */
+// app.delete("/personas/:personaId", (req, res) => {
+//   try {
+//     const { personaId } = req.params
+//     const p = store.personas[personaId]
+//     if (!p) {
+//       res.sendStatus(400)
+//       return
+//     }
+//     delete store.personas[personaId]
+//     res.json({ msg: "OK" })
+//   } catch (err) {
+//     console.error(err)
+//     res.sendStatus(500)
+//   }
+// })
 
 app.post("/expand/persona", async (req, res) => {
   const sys = `
@@ -245,6 +244,7 @@ app.post("/expand/persona", async (req, res) => {
     - Ensure the prompt avoids contradictions, vagueness, or generic traits.
     - Optimize the wording for use as a system-level instruction, not just descriptive prose.
     Your output should always be a self-contained, polished system prompt that can be directly used to guide AI behavior in the forum simulation.
+    Just respond with the text for the prompt, don't begin by saying "System Prompt:"
   `
   try {
     const { profile } = req.body
@@ -363,8 +363,6 @@ app.post("/intervene", async (req, res) => {
     res.sendStatus(500)
   }
 })
-
-// MAIN
 
 app.listen(PORT, () => {
   console.log(`Forum API server running on http://localhost:${PORT}`)

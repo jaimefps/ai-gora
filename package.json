@@ -24,6 +24,7 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "nodemon --exec ts-node index.ts",
+    "debug": "nodemon --exec \"node --inspect-brk -r ts-node/register index.ts\"",
     "demo": "ts-node tests/demo.ts"
   }
 }

@@ -1,37 +1,71 @@
-# GET http://localhost:8080/threads HTTP/1.1
-# content-type: application/json
+POST http://localhost:8080/personas HTTP/1.1
+content-type: application/json
 
-# POST http://localhost:8080/threads HTTP/1.1
-# content-type: application/json
+{
+    "name": "emo",
+    "sys":"you are an emo teenager"
+}
 
-# {
-#     "personas": [123],
-#     "topic":"test"
-# }
+###
+
+POST http://localhost:8080/personas HTTP/1.1
+content-type: application/json
+
+{
+    "name": "clown",
+    "sys":"you are a funny millennial"
+}
+
+###
+
+POST http://localhost:8080/personas HTTP/1.1
+content-type: application/json
+
+{
+    "name": "professor",
+    "sys":"you are a serious boomer"
+}
+
+###
+
+GET http://localhost:8080/personas HTTP/1.1
+content-type: application/json
+
+###
+
+POST http://localhost:8080/threads HTTP/1.1
+content-type: application/json
+
+{
+    "personas": ["1751669093523", "1751669095461", "1751669096398"],
+    "topic":"what is the purpose of life"
+}
+
+###
+
+GET http://localhost:8080/threads HTTP/1.1
+content-type: application/json
+
+###
 
 # DELETE http://localhost:8080/threads/1751488032160 HTTP/1.1
 # content-type: application/json
 
-# GET http://localhost:8080/personas HTTP/1.1
-# content-type: application/json
-
-# POST http://localhost:8080/personas HTTP/1.1
-# content-type: application/json
-
-# {
-#     "name": "name_here",
-#     "prompt":"prompt_here"
-# }
+# ###
 
 # DELETE http://localhost:8080/personas/1751488032160 HTTP/1.1
 # content-type: application/json
 
-# POST http://localhost:8080/expansions HTTP/1.1
+# ###
+
+# POST http://localhost:8080/expand/topic HTTP/1.1
 # content-type: application/json
 
 # {
-#     "profile":"you are an angry child"
+#     "topic":"the purpose of life"
 # }
+
+# ###
 
 # POST http://localhost:8080/threads HTTP/1.1
 # content-type: application/json
@@ -40,3 +74,5 @@
 #     "topic":"test",
 #     "personas":["123","456","789", "000"]
 # }
+
+
