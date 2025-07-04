@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-import { db, provider, usrKey, exec } from "./controllers"
+import { store, provider, usrKey, exec, Persona } from "./controllers"
 import shuffle from "lodash.shuffle"
 import helmet from "helmet"
 import express from "express"
@@ -17,10 +17,24 @@ app.use(express.json())
 
 // THREADS
 
+app.get("/threads", (req, res) => {
+  try {
+    res.json({
+      objects: Object.entries(store.threads).map(([threadId, t]) => ({
+        threadId,
+        ...t,
+      })),
+    })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
+})
+
 app.get("/threads/:threadId", (req, res) => {
   try {
     const { threadId } = req.params
-    const t = db.threads[threadId]
+    const t = store.threads[threadId]
     if (!t) {
       res.sendStatus(400)
       return
@@ -35,38 +49,26 @@ app.get("/threads/:threadId", (req, res) => {
   }
 })
 
-app.get("/threads", (req, res) => {
-  try {
-    res.json({
-      objects: Object.entries(db.threads).map(([threadId, t]) => ({
-        threadId,
-        ...t,
-      })),
-    })
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-  }
-})
-
 app.post("/threads", (req, res) => {
   try {
     const threadId = String(Date.now())
-    const { topic, personas, config } = req.body
-    const order = shuffle(personas)
+    // todo: allow for config updates:
+    const { topic, personas } = req.body
 
-    db.threads[threadId] = {
+    // todo: use config.loops
+    // to set length of stream.
+    const order = shuffle(personas)
+    const stack = [...order, ...order]
+
+    store.threads[threadId] = {
       topic,
       personas,
       stream: [],
+      stack,
       config: {
         delay: 250,
-        loopTimes: 2,
-        ...config,
+        //...(config as Partial<(typeof store.threads)[string]["config"]>),
       },
-      // todo: insert based on
-      // config.loopTimes:
-      stack: [...order],
     }
 
     exec(threadId)
@@ -80,57 +82,69 @@ app.post("/threads", (req, res) => {
   }
 })
 
-app.put("/threads/:threadId", (req, res) => {
-  try {
-    const { threadId } = req.params
-    const { topic, personas, config } = req.body
-    const t = db.threads[threadId]
-    if (!t) {
-      res.sendStatus(400)
-      return
-    }
-    const next = {
-      ...t,
-      topic,
-      personas,
-      config: {
-        ...t.config,
-        ...config,
-      },
-    }
-    db.threads[threadId] = next
-    res.json({
-      threadId,
-      ...next,
-    })
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-  }
-})
+/**
+ * Maybe only allow updates to
+ * via the `/intervene` endpoint.
+ *
+ */
+// app.put("/threads/:threadId", (req, res) => {
+//   try {
+//     const { threadId } = req.params
+//     const { topic, personas, config } = req.body
+//     const t = store.threads[threadId]
+//     if (!t) {
+//       res.sendStatus(400)
+//       return
+//     }
+//     const next = {
+//       ...t,
+//       topic: topic ?? t.topic,
+//       // risky to allow persona updates here;
+//       // only `/intervene` should do this.
+//       personas: personas ?? t.personas,
+//       config: {
+//         ...t.config,
+//         delay: config?.delay ?? t.config.delay,
+//       },
+//     }
+//     store.threads[threadId] = next
+//     res.json({
+//       threadId,
+//       ...next,
+//     })
+//   } catch (err) {
+//     console.error(err)
+//     res.sendStatus(500)
+//   }
+// })
 
-app.delete("/threads/:threadId", (req, res) => {
-  try {
-    const { threadId } = req.params
-    const t = db.threads[threadId]
-    if (!t) {
-      res.sendStatus(400)
-      return
-    }
-    delete db.threads[threadId]
-    res.json({ msg: "OK" })
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-  }
-})
+/**
+ * Eventually enable,
+ * not necessary for demo.
+ *
+ */
+// app.delete("/threads/:threadId", (req, res) => {
+//   try {
+//     const { threadId } = req.params
+//     const t = store.threads[threadId]
+//     if (!t) {
+//       res.sendStatus(400)
+//       return
+//     }
+//     delete store.threads[threadId]
+//     res.json({ msg: "OK" })
+//   } catch (err) {
+//     console.error(err)
+//     res.sendStatus(500)
+//   }
+// })
 
 // PERSONAS
 
 app.get("/personas", (req, res) => {
   try {
     res.json({
-      objects: Object.entries(db.personas).map(([personaId, p]) => ({
+      objects: Object.entries(store.personas).map(([personaId, p]) => ({
         personaId,
         ...p,
       })),
@@ -144,7 +158,7 @@ app.get("/personas", (req, res) => {
 app.get("/personas/:personaId", (req, res) => {
   try {
     const { personaId } = req.params
-    const p = db.personas[personaId]
+    const p = store.personas[personaId]
     if (!p) {
       res.sendStatus(400)
       return
@@ -162,10 +176,10 @@ app.get("/personas/:personaId", (req, res) => {
 app.post("/personas", (req, res) => {
   try {
     const personaId = String(Date.now())
-    const { name, prompt } = req.body
-    db.personas[personaId] = {
-      prompt,
+    const { name, sys } = req.body
+    store.personas[personaId] = {
       name,
+      sys,
     }
     res.json({ personaId })
   } catch (err) {
@@ -177,18 +191,18 @@ app.post("/personas", (req, res) => {
 app.put("/personas/:personaId", (req, res) => {
   try {
     const { personaId } = req.params
-    const { name, prompt } = req.body
-    const p = db.threads[personaId]
+    const { name, sys } = req.body
+    const p = store.personas[personaId]
     if (!p) {
       res.sendStatus(400)
       return
     }
     const next = {
       ...p,
-      prompt,
-      name,
+      name: name ?? p.name,
+      sys: sys ?? p.sys,
     }
-    db.personas[personaId] = next
+    store.personas[personaId] = next
     res.json({
       personaId: personaId,
       ...next,
@@ -202,12 +216,12 @@ app.put("/personas/:personaId", (req, res) => {
 app.delete("/personas/:personaId", (req, res) => {
   try {
     const { personaId } = req.params
-    const p = db.personas[personaId]
+    const p = store.personas[personaId]
     if (!p) {
       res.sendStatus(400)
       return
     }
-    delete db.personas[personaId]
+    delete store.personas[personaId]
     res.json({ msg: "OK" })
   } catch (err) {
     console.error(err)
@@ -274,7 +288,7 @@ app.post("/expand/topic", async (req, res) => {
 app.post("/intervene", async (req, res) => {
   try {
     const { threadId, action, payload } = req.body
-    const t = db.threads[threadId]
+    const t = store.threads[threadId]
     if (!t) {
       res.sendStatus(400)
       return

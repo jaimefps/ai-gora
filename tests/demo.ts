@@ -4,7 +4,7 @@ import fs from "fs"
 import path from "path"
 import { z } from "zod"
 import OpenAI from "openai"
-import * as schemas from "./schemas"
+import * as schemas from "../schemas"
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -312,5 +312,5 @@ Promise.all([
   })
   .then(() => {
     const state = JSON.stringify(convo, null, 2)
-    fs.writeFileSync("sample.txt", state)
+    fs.writeFileSync("demo.txt", state)
   })

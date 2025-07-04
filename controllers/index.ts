@@ -1,12 +1,19 @@
-import * as schemas from "../schemas"
-import OpenAI from "openai"
-import { z } from "zod"
 import fs from "fs"
 import path from "path"
+import { z } from "zod"
+import OpenAI from "openai"
+import * as schemas from "../schemas"
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
 /**
  * ideas:
  *
+ * - rename: SchemaEvents => ResponseEvents
+ * - enforce uniqueness of useKey and modKey as names
+ * - replace types with zods and use to validate the REST layer
  * - allow ACK & VOTE calls to be independent, instead of await P.all()
  * - prompt at the end of each loop if ready to vote?
  * - drag & drop ui allows user to reorder the stack
@@ -14,12 +21,15 @@ import path from "path"
  * - enable retries if call schema response fails
  */
 
-// todo: review how to enforce uniqueness:
-export const usrKey = "AGORA_INTERNAL_USER"
-export const modKey = "AGORA_INTERNAL_MODERATOR"
+export const usrKey = "AIGORA_INTERNAL_USER" as const
+export const modKey = "AIGORA_INTERNAL_MODERATOR" as const
+export const keyIds = {
+  [usrKey]: "001",
+  [modKey]: "002",
+} as const
+type InternalKey = keyof typeof keyIds
 
 type SchemaName = keyof typeof schemas
-
 type SchemaEvent = {
   [K in SchemaName]: {
     timestamp: number
@@ -28,11 +38,13 @@ type SchemaEvent = {
      */
     sourceId: string | typeof modKey | typeof usrKey
     /**
-     * schema name; for easier lookups
+     * schema name;
+     * for easy lookups.
      */
     type: K
     /**
-     * data that matches the schema
+     * 1:1 match with schemas;
+     * usually a bot's response.
      */
     payload: z.infer<(typeof schemas)[K]>
   }
@@ -45,11 +57,11 @@ type MarkerEvent =
       /**
        * who we are waiting for
        */
-      personaId: string
+      botId: string
       /**
        * response we are waiting for
        */
-      schema: SchemaName
+      loading: SchemaName
     }
   | {
       type: "PauseMarker"
@@ -91,37 +103,82 @@ type MarkerEvent =
        */
       sourceId: string
     }
+  | {
+      type: "DismissMarker"
+      timestamp: number
+      /**
+       * who is being removed from thread
+       */
+      personaId: string
+      /**
+       * source of event
+       */
+      sourceId: string
+    }
+  | {
+      type: "ErrorMarker"
+      timestamp: number
+      message: string
+    }
 
 export type StreamEvent = SchemaEvent | MarkerEvent
 
 export type Thread = {
   topic: string
-  personas: string[]
   stream: StreamEvent[]
-  stack: string[]
   config: {
     delay: number
-    loops: number
+    // loops: number
+    // provider: "gpt" | "claude" | "gemini"
   }
+  /**
+   * Array of personaIds
+   * to be called in thread.
+   */
+  personas: string[]
+  /**
+   * Array of personaIds,
+   * determines order of invoking
+   * each of the involved parties.
+   */
+  stack: string[]
 }
 
 export type Persona = {
   name: string
-  prompt: string
+  sys: string
 }
 
-function getSchemas(fileName: string) {
-  const schemaPath = path.join(__dirname, "../schemas", `${fileName}.ts`)
-  return fs.readFileSync(schemaPath, "utf8")
-}
+/**
+ * Set of thread ids.
+ *
+ * Track active threads;
+ * prevent parallel calls
+ * of the same thread.
+ */
+const live = new Set<string>()
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+/**
+ * When to interrupt the
+ * exec and possibly exit
+ * any live calls.
+ */
+const breaks = new Set<StreamEvent["type"]>()
+breaks.add("PauseMarker")
+breaks.add("ErrorMarker")
 
-export const db: {
-  threads: { [k: string]: Thread }
-  personas: { [k: string]: Persona }
+/**
+ * Calls done in parallel;
+ * instead of sequentially
+ * like most other calls.
+ */
+const swarm = new Set<StreamEvent["type"]>()
+swarm.add("AckSchema")
+swarm.add("VoteSchema")
+
+export const store: {
+  threads: Record<string, Thread>
+  personas: Record<string, Persona>
 } = {
   threads: {},
   personas: {},
@@ -149,205 +206,250 @@ export const provider = {
   // async gemini() {},
 }
 
+// `never` informs TS that this function throws:
+function crash(threadId: string, msg: string): never {
+  const t = store.threads[threadId]
+  if (!t) throw new Error(`Invalid threadId: ${threadId}`)
+  const str = `Error at: ${threadId}: ${msg}`
+  t.stream.push({
+    type: "ErrorMarker",
+    timestamp: Date.now(),
+    message: str,
+  })
+  const dir = path.join(__dirname, "../errors")
+  const file = path.join(dir, `${threadId}_${Date.now()}_failed.txt`)
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(file, JSON.stringify(t, null, 2))
+  throw new Error(str)
+}
+
 const format = {
   thread(threadId: string) {
-    const t = db.threads[threadId]
+    const t = store.threads[threadId]
     return t.stream
       .filter((evt) => {
         return evt.type === "ThesisSchema"
       })
       .map((evt) => {
-        const p = db.personas[evt.sourceId]
-        // const name =
+        let id: string
+        let name: string
+        if (Object.hasOwn(keyIds, evt.sourceId)) {
+          id = keyIds[evt.sourceId as InternalKey]
+          name = evt.sourceId
+        } else {
+          const p = store.personas[evt.sourceId]
+          if (!p) crash(threadId, `Invalid sourceId: ${evt.sourceId}`)
+          id = evt.sourceId
+          name = p.name
+        }
         return `
-        ${p.name} (id:${evt.sourceId}): 
-        ${evt.payload.public_response}
+        ------------------------------
+        ${name} (id:${id}): 
+        ${evt.payload.public_response ?? "(nothing to say)"}
+        ------------------------------
         `
       })
-      .join("\n\n")
+      .join("\n")
   },
   summary(threadId: string) {
-    return ``
+    const t = store.threads[threadId]
+    const summary = t.stream.find((evt) => evt.type === "SummarySchema")
+    if (!summary) crash(threadId, "Failed to find summary")
+    summary.payload.ideas.forEach((item, idx) => {
+      // @ts-ignore: we force a new field
+      // for the bots to know how to vote.
+      item.vote_id = idx + 1
+    })
+    return summary
   },
+  // not needed for demo:
   votes(threadId: string) {
+    const t = store.threads[threadId]
+    const votes = t.stream.filter((evt) => evt.type === "VoteSchema")
     return ``
   },
 }
 
-const hydrate = {
+function getSchemas(fileName: string) {
+  const schemaPath = path.join(__dirname, "../schemas", `${fileName}.ts`)
+  return fs.readFileSync(schemaPath, "utf8")
+}
+
+const compose = {
   moderator(topic: string) {
     return `
-      <PERSONALITY>
-        You are an impartial moderator facilitating a discussion forum. You won't participate
-        in the overall discussion, you are only a helper that is invoked for analysis, summaries,
-        and other operations required for managing the forum successfully and enabling the personas
-        to effectively discuss the topic at hand among themselves.
-      </PERSONALITY>
-
-      <RULES>
-        Every message directed at you will say in what format you must respond. Failure 
-        to do so results in being removed from the forum. You are only meant to respond 
-        in JSON satisfying these schemas:
-        <SHARED_SCHEMAS>
-          ${getSchemas("shared")}
-        </SHARED_SCHEMAS>
-        <MODERATOR_SCHEMAS>
-          ${getSchemas("moderator")}
-        </MODERATOR_SCHEMAS>
-      </RULES>
-
-      <DEBATE>
-        ${topic}
-      </DEBATE>
-      `
+    <RULES>
+      Every message directed at you will say in what format you must respond. Failure 
+      to do so results in being removed from the forum. You are only meant to respond 
+      in JSON satisfying these schemas:
+      <SHARED_SCHEMAS>
+        ${getSchemas("shared")}
+      </SHARED_SCHEMAS>
+      <MODERATOR_SCHEMAS>
+        ${getSchemas("moderator")}
+      </MODERATOR_SCHEMAS>
+    </RULES>
+    <DEBATE>
+      ${topic}
+    </DEBATE>
+    <PERSONALITY>
+      You are an impartial moderator facilitating a discussion forum. You won't participate
+      in the overall discussion, you are only a helper that is invoked for analysis, summaries,
+      and other operations required for managing the forum successfully and enabling the personas
+      to effectively discuss the topic at hand among themselves.
+    </PERSONALITY>
+    `
   },
   persona(sys: string, topic: string) {
     return `
-      <PERSONALITY>
-        You are participating in a forum discussion. Your goal is to persuade others to support your ideas. 
-        You argue, explain, and challenge other opinions to push the conversation forward. You're not here to just 
-        agree—disagreement is expected. Speak casually, like a normal person posting in a forum. You can be blunt, 
-        pushy, even crass, if it fits your style. You're trying to convince people, not necessarily play nice. Eventually
-        a moderator will submit a list of ideas that came up during the thread, and you will all vote on what answer you think
-        is best. And most importantly, you are:
-        ${sys}
-      </PERSONALITY>
-
-      <RULES>
-        Every message will say in what format you must respond. 
-        Failure to do so results in being removed from the forum. 
-        You are only meant to respond in JSON satisfying these schemas:
-
-        <SHARED_SCHEMAS>
-          ${getSchemas("shared")}
-        </SHARED_SCHEMAS>
-
-        <PERSONA_SCHEMAS>
-          ${getSchemas("persona")}
-        </PERSONA_SCHEMAS>
-      </RULES>
-
-      <DEBATE>
-        ${topic}
-      </DEBATE>
-      `
+    <RULES>
+      Every message will say in what format you must respond. 
+      Failure to do so results in being removed from the forum. 
+      You are only meant to respond in JSON satisfying these schemas:
+      <SHARED_SCHEMAS>
+        ${getSchemas("shared")}
+      </SHARED_SCHEMAS>
+      <PERSONA_SCHEMAS>
+        ${getSchemas("persona")}
+      </PERSONA_SCHEMAS>
+    </RULES>
+    <DEBATE>
+      ${topic}
+    </DEBATE>
+    <PERSONALITY>
+      You are participating in a forum discussion. Your goal is to persuade others to support your ideas. 
+      You argue, explain, and challenge other opinions to push the conversation forward. You're not here to just 
+      agree—disagreement is expected. Speak casually, like a normal person posting in a forum. You can be blunt, 
+      pushy, even crass, if it fits your style. You're trying to convince people, not necessarily play nice. Eventually
+      a moderator will submit a list of ideas that came up during the thread, and you will all vote on what answer you think
+      is best. And most importantly, you are:
+      ${sys}
+    </PERSONALITY>
+    `
   },
-  content(threadId: string, schema: SchemaName) {
+  prompt(threadId: string, schema: SchemaName) {
     switch (schema) {
       case "AckSchema": {
         return `
-      <RESPONSE_SCHEMA>
-        ${schema}
-      </RESPONSE_SCHEMA>
-      `
+        <RESPONSE_SCHEMA>
+          ${schema}
+        </RESPONSE_SCHEMA>
+        `
       }
-
-      case "WarningsSchema": {
-        return `
-      <DISCUSSION_THREAD>
-        ${format.thread(threadId)}
-      </DISCUSSION_THREAD>
-      <VOTES>
-        ${format.votes(threadId)}
-      </VOTES>
-      <RESPONSE_SCHEMA>
-        ${schema}
-      </RESPONSE_SCHEMA>
-      `
-      }
-
       case "ThesisSchema": {
         return `
-      <DISCUSSION_THREAD>
-        ${format.thread(threadId)}
-      </DISCUSSION_THREAD>
-      <RESPONSE_SCHEMA>
-        ${schema}
-      </RESPONSE_SCHEMA>
-      `
+        <RESPONSE_SCHEMA>
+          ${schema}
+        </RESPONSE_SCHEMA>
+        <DISCUSSION_THREAD>
+          ${format.thread(threadId)}
+        </DISCUSSION_THREAD>
+        `
       }
-
       case "SummarySchema": {
         return `
-      <DISCUSSION_THREAD>
-        ${format.thread(threadId)}
-      </DISCUSSION_THREAD>
-      <RESPONSE_SCHEMA>
-        ${schema}
-      </RESPONSE_SCHEMA>
-      `
+        <RESPONSE_SCHEMA>
+          ${schema}
+        </RESPONSE_SCHEMA>
+        <DISCUSSION_THREAD>
+          ${format.thread(threadId)}
+        </DISCUSSION_THREAD>
+        `
       }
-
       case "VoteSchema": {
         return `
-      <DISCUSSION_THREAD>
-        ${format.thread(threadId)}
-      </DISCUSSION_THREAD>
-      <SUMMARY>
-        Only use one of the vote_id's from 
-        this list for your vote response:
-       ${format.summary(threadId)}
-      </SUMMARY>
-      <RESPONSE_SCHEMA>
-        ${schema}
-      </RESPONSE_SCHEMA>
-      `
+        <RESPONSE_SCHEMA>
+          ${schema}
+        </RESPONSE_SCHEMA>
+        <DISCUSSION_THREAD>
+          ${format.thread(threadId)}
+        </DISCUSSION_THREAD>
+        <SUMMARY>
+          Only use one of the vote_id's from 
+          this list for your vote response:
+        ${format.summary(threadId)}
+        </SUMMARY>
+        `
+      }
+      // not needed for demo:
+      case "WarningsSchema": {
+        return `
+        <DISCUSSION_THREAD>
+          ${format.thread(threadId)}
+        </DISCUSSION_THREAD>
+        <VOTES>
+          ${format.votes(threadId)}
+        </VOTES>
+        <RESPONSE_SCHEMA>
+          ${schema}
+        </RESPONSE_SCHEMA>
+        `
       }
     }
   },
 }
 
-const active = new Set()
-const breaks = new Set<StreamEvent["type"]>()
-breaks.add("PauseMarker")
-
 function halt(threadId: string) {
-  const t = db.threads[threadId]
+  const t = store.threads[threadId]
   const last = t.stream.at(-1)
-  // fallback to "pause" avoids infinite loop:
+
+  // don't halt empty stream or swarm calls; those should
+  // finish before breaks; difficult to restore if stopped.
+  const isSwarming = last?.type === "LoadMarker" && swarm.has(last.loading)
+  if (!last || isSwarming) return false
+
+  // fallback to Pause to avoid infinite loops:
   if (breaks.has(last?.type ?? "PauseMarker")) {
-    active.delete(threadId)
+    live.delete(threadId)
     return true
   }
+
   return false
 }
 
-function getSys(sourceId: string, topic: string) {
-  if (sourceId === modKey) {
-    return hydrate.moderator(topic)
-  }
-  const p = db.personas[sourceId]
-  return hydrate.persona(p.prompt, topic)
-}
-
-// note: the order matters.
-// todo: how to makes this less of a mess;
+// note: the order matters!
 function getOp(threadId: string): SchemaName {
-  const t = db.threads[threadId]
-
+  const t = store.threads[threadId]
   if (!t.stream.length) {
     return "AckSchema"
   }
-
   if (t.stream.length && t.stack.length) {
     return "ThesisSchema"
   }
-
   if (
     !t.stack.length &&
     !t.stream.some((item) => item.type === "SummarySchema")
   ) {
     return "SummarySchema"
   }
-
   if (
     t.stream.some((item) => item.type === "SummarySchema") &&
     !t.stream.some((item) => item.type === "VoteSchema")
   ) {
     return "VoteSchema"
   }
+  crash(threadId, `Failed to get operation: ${threadId}`)
+}
 
-  throw new Error(`Failed to get operation: ${threadId}`)
+function getSys(botId: string | typeof modKey, topic: string) {
+  if (botId === modKey) {
+    return compose.moderator(topic)
+  }
+  const p = store.personas[botId]
+  if (!p) throw new Error(`Invalid personaId: ${botId}`)
+  return compose.persona(p.sys, topic)
+}
+
+function getPrompt(threadId: string, schema: SchemaName) {
+  return compose.prompt(threadId, schema)
+}
+
+function getBotIds(threadId: string, op: SchemaName): string[] {
+  const t = store.threads[threadId]
+  if (swarm.has(op)) return t.personas
+  const botId = op === "SummarySchema" ? modKey : t.stack.pop()
+  if (!botId) crash(threadId, `Missing bot for op: ${op}`)
+  return [botId]
 }
 
 /**
@@ -355,68 +457,65 @@ function getOp(threadId: string): SchemaName {
  * @param botId - personaId OR modKey
  * @param schema - SchemaName
  */
-async function call(threadId: string, botId: string, schema: SchemaName) {
-  const t = db.threads[threadId]
+async function call(threadId: string) {
+  if (halt(threadId)) return
 
-  t.stream.push({
-    type: "LoadMarker",
-    timestamp: Date.now(),
-    personaId: botId,
-    schema,
-  })
+  const op = getOp(threadId)
+  const botIds = getBotIds(threadId, op)
 
-  const sys = getSys(botId, t.topic)
-  const prompt = hydrate.content(threadId, schema)
-  const response = await provider.gpt(sys, prompt)
+  const calls = botIds.map(async (botId) => {
+    const t = store.threads[threadId]
 
-  const payload = JSON.parse(response ?? "")
+    t.stream.push({
+      type: "LoadMarker",
+      timestamp: Date.now(),
+      loading: op,
+      botId,
+    })
 
-  // todo: handle retries
-  // when validation fails
-  // note: TS sees this as `any`
-  schemas[schema].parse(payload)
+    const result = await provider.gpt(
+      getSys(botId, t.topic),
+      getPrompt(threadId, op)
+    )
 
-  t.stream.push({
-    type: schema,
-    sourceId: botId,
-    timestamp: Date.now(),
-    payload,
-  })
-}
+    // note: TS sees payload as `any`
+    const payload = JSON.parse(result ?? "")
 
-export async function exec(threadId: string) {
-  if (active.has(threadId)) return
-  active.add(threadId)
-
-  const t = db.threads[threadId]
-
-  while (true) {
-    if (halt(threadId)) return
-    const op = getOp(threadId)
-
-    let currId: string
-
-    if (op === "AckSchema") {
-      const personas = t.personas.map((pId) => db.personas[pId])
-      const calls = [() => null]
-      await Promise.all(calls)
-
-      // const ackList = pList.map((p) => call())
-    } else if (op === "ThesisSchema") {
-    } else if (op === "SummarySchema") {
-    } else if (op === "VoteSchema") {
+    const review = schemas[op].safeParse(payload)
+    if (!review.success) {
+      const msg = `Invalid provider response: ${review.error}`
+      crash(threadId, msg)
     }
 
     if (halt(threadId)) {
-      // put the persona
-      // back in the stack:
-      // t.stack.push(nextId)
+      // put the personaId back in the stack
+      // so they get called again when resuming:
+      if (t.personas.includes(botId)) {
+        t.stack.push(botId)
+      }
       return
     }
 
-    // yield to main thread:
-    await new Promise((res) => {
-      setTimeout(res, Math.max(t.config.delay, 250))
+    t.stream.push({
+      type: op,
+      sourceId: botId,
+      timestamp: Date.now(),
+      payload,
+    })
+  })
+
+  return Promise.all(calls)
+}
+
+export async function exec(threadId: string) {
+  if (live.has(threadId)) return
+  live.add(threadId)
+
+  while (!halt(threadId)) {
+    await call(threadId)
+    await new Promise((r) => {
+      const { delay } = store.threads[threadId].config
+      setTimeout(r, Math.max(delay ?? 250, 250))
     })
   }
 }
