@@ -233,7 +233,6 @@ async function callBot(
   schema: keyof typeof schemas
 ) {
   // for when symbol => string
-  const botName = String(botKey)
   const content = createPrompt(schema)
 
   try {
@@ -258,8 +257,8 @@ async function callBot(
       ],
     })
 
-    const answer = JSON.parse(response.choices[0].message.content ?? "")
-    // console.log({ [botName]: answer })
+    const src = response.choices[0].message.content
+    const answer = JSON.parse(src ?? "")
 
     // will throw if invalid:
     schemas[schema].parse(answer)
@@ -274,6 +273,7 @@ async function callBot(
 
     return entry
   } catch (err) {
+    const botName = String(botKey)
     console.error(`Failed to get response from ${botName}:`, err)
   }
 }

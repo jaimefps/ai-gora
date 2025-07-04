@@ -1,6 +1,7 @@
 require("dotenv").config()
 
-import { db, providers, usrKey, exec } from "./controllers"
+import { db, provider, usrKey, exec } from "./controllers"
+import shuffle from "lodash.shuffle"
 import helmet from "helmet"
 import express from "express"
 import cors from "cors"
@@ -50,15 +51,29 @@ app.get("/threads", (req, res) => {
 
 app.post("/threads", (req, res) => {
   try {
-    const threadId = Date.now()
+    const threadId = String(Date.now())
     const { topic, personas, config } = req.body
+    const order = shuffle(personas)
+
     db.threads[threadId] = {
-      config: config ?? {},
-      stream: [],
-      personas,
       topic,
+      personas,
+      stream: [],
+      config: {
+        delay: 250,
+        loopTimes: 2,
+        ...config,
+      },
+      // todo: insert based on
+      // config.loopTimes:
+      stack: [...order],
     }
-    res.json({ threadId })
+
+    exec(threadId)
+
+    res.json({
+      threadId,
+    })
   } catch (err) {
     console.error(err)
     res.sendStatus(500)
@@ -146,7 +161,7 @@ app.get("/personas/:personaId", (req, res) => {
 
 app.post("/personas", (req, res) => {
   try {
-    const personaId = Date.now()
+    const personaId = String(Date.now())
     const { name, prompt } = req.body
     db.personas[personaId] = {
       prompt,
@@ -202,7 +217,7 @@ app.delete("/personas/:personaId", (req, res) => {
 
 // UTILS
 
-app.post("/expand", async (req, res) => {
+app.post("/expand/persona", async (req, res) => {
   const sys = `
     You are an expert in human behavior and AI prompt design, with deep knowledge of psychology, sociology, philosophy, and behavioral economics. 
     Your task is to generate or improve system prompts that define the behavior of AI-bots used in a simulated forum environment.
@@ -219,8 +234,9 @@ app.post("/expand", async (req, res) => {
   `
   try {
     const { profile } = req.body
-    const response = await providers.gpt(sys, profile)
-    const result = response.choices[0].message.content
+    const result = await provider.gpt(sys, profile, {
+      max_tokens: 999,
+    })
     res.json({ result })
   } catch (err) {
     console.error(err)
@@ -228,46 +244,94 @@ app.post("/expand", async (req, res) => {
   }
 })
 
-app.post("/interrupt", async (req, res) => {
+app.post("/expand/topic", async (req, res) => {
+  const sys = `
+    You are an expert in question refinement and discussion design, with deep knowledge in critical thinking, epistemology, rhetoric, and intellectual discourse.
+    Your task is to expand and enhance user-submitted questions or discussion topics to make them more precise, thought-provoking, and intellectually engaging.
+    Each expanded version you produce should help the user articulate a clearer, more nuanced, or more productive inquiry.
+    You will be given a raw or informal question or topic written by a human.
+    Your job is to:
+    - Clarify ambiguous phrasing or vague intentions behind the question.
+    - Surface underlying assumptions, motivations, or implications that can deepen the inquiry.
+    - Suggest more specific or insightful framings of the topic.
+    - Preserve the user's core intent while offering higher-resolution versions of their question.
+    - Offer alternate angles, rephrasings, or follow-up directions that enrich the discussion potential.
+    - Avoid generic academic verbosity; focus on clarity, depth, and conversational utility.
+    Your output should be a self-contained, improved version of the user's question or topic—polished, purposeful, and ready to prompt a more meaningful exchange.
+  `
+  try {
+    const { topic } = req.body
+    const result = await provider.gpt(sys, topic, {
+      max_tokens: 999,
+    })
+    res.json({ result })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
+})
+
+app.post("/intervene", async (req, res) => {
   try {
     const { threadId, action, payload } = req.body
-
     const t = db.threads[threadId]
     if (!t) {
       res.sendStatus(400)
       return
     }
-
+    /**
+     * todo: validate that the user can intervene; likely require
+     * a PauseMarker at(-1) for any other interventions to be valid:
+     */
     switch (action.type) {
+      // todo: maybe only allow Puase
+      // if all bots have already ACK
       case "pause":
         t.stream.push({
           type: "PauseMarker",
           timestamp: Date.now(),
-          source: usrKey,
+          sourceId: usrKey,
         })
         break
+      // todo: maybe this just pops the
+      // PauseMarker from the t.stream?
+      // or when t.stream(-1) == RESUME,
       case "resume":
         t.stream.push({
           type: "ResumeMarker",
           timestamp: Date.now(),
-          source: usrKey,
+          sourceId: usrKey,
         })
         break
+      // todo: i need to think more about this case;
+      // unclear how the stack of bots is impacted,
+      // likely regenerate the stack:
       case "select":
         t.stream.push({
           type: "SelectMarker",
-          personaId: payload.personaId,
           timestamp: Date.now(),
-          source: usrKey,
+          personaId: payload.personaId,
+          sourceId: usrKey,
+        })
+        break
+      // todo: i need to think more about this case;
+      // unclear how the stack of bots is impacted,
+      // likely regenerate the stack:
+      case "invite":
+        t.stream.push({
+          type: "SelectMarker",
+          timestamp: Date.now(),
+          personaId: payload.personaId,
+          sourceId: usrKey,
         })
         break
       case "speak":
         t.stream.push({
           type: "ThesisSchema",
           timestamp: Date.now(),
-          personaId: usrKey,
+          sourceId: usrKey,
           payload: {
-            secret_thoughts: "",
+            secret_thoughts: payload.reason,
             public_response: payload.prompt,
           },
         })

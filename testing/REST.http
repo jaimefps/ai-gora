@@ -32,3 +32,11 @@
 # {
 #     "profile":"you are an angry child"
 # }
+
+# POST http://localhost:8080/threads HTTP/1.1
+# content-type: application/json
+
+# {
+#     "topic":"test",
+#     "personas":["123","456","789", "000"]
+# }
