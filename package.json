@@ -24,6 +24,6 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "nodemon --exec ts-node index.ts",
-    "demo": "ts-node demo.ts"
+    "demo": "ts-node tests/demo.ts"
   }
 }

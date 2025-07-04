@@ -83,7 +83,7 @@ type MarkerEvent =
       type: "InviteMarker"
       timestamp: number
       /**
-       * who is being asked to speak
+       * who is being added to stack
        */
       personaId: string
       /**
