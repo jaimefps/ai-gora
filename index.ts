@@ -287,7 +287,7 @@ app.post("/expand/topic", async (req, res) => {
 
 app.post("/intervene", async (req, res) => {
   try {
-    const { threadId, action, payload } = req.body
+    const { threadId, action } = req.body
     const t = store.threads[threadId]
     if (!t) {
       res.sendStatus(400)
@@ -322,8 +322,8 @@ app.post("/intervene", async (req, res) => {
           timestamp: Date.now(),
           sourceId: usrKey,
           payload: {
-            secret_thoughts: payload.reason,
-            public_response: payload.prompt,
+            secret_thoughts: action?.payload.reason,
+            public_response: action?.payload.prompt,
           },
         })
         break
@@ -334,7 +334,7 @@ app.post("/intervene", async (req, res) => {
         t.stream.push({
           type: "SelectMarker",
           timestamp: Date.now(),
-          personaId: payload.personaId,
+          personaId: action?.payload.personaId,
           sourceId: usrKey,
         })
         break
@@ -345,7 +345,7 @@ app.post("/intervene", async (req, res) => {
         t.stream.push({
           type: "SelectMarker",
           timestamp: Date.now(),
-          personaId: payload.personaId,
+          personaId: action?.payload.personaId,
           sourceId: usrKey,
         })
       // todo: i need to think more about this case;
@@ -355,7 +355,7 @@ app.post("/intervene", async (req, res) => {
         t.stream.push({
           type: "SelectMarker",
           timestamp: Date.now(),
-          personaId: payload.personaId,
+          personaId: action?.payload.personaId,
           sourceId: usrKey,
         })
         break
