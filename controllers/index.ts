@@ -164,9 +164,9 @@ const live = new Set<string>()
  * any live calls.
  */
 const breaks = new Set<StreamEvent["type"]>()
+// breaks.add("VoteSchema")
 breaks.add("PauseMarker")
 breaks.add("ErrorMarker")
-breaks.add("VoteSchema")
 
 /**
  * Calls done in parallel;
@@ -411,10 +411,15 @@ function halt(threadId: string) {
   const isSwarming = last?.type === "LoadMarker" && swarm.has(last.loading)
   if (!last || isSwarming) return false
 
-  // fallback to Pause to avoid infinite loops:
-  if (breaks.has(last?.type ?? "PauseMarker")) {
+  const votes = t.stream.filter((evt) => evt.type === "VoteSchema")
+  if (votes.length === t.personas.length) {
     console.log("-- Halting & Dumping --")
     saveThread(threadId, "dump_results")
+    return true
+  }
+
+  // fallback to Pause to avoid infinite loops:
+  if (breaks.has(last?.type ?? "PauseMarker")) {
     live.delete(threadId)
     return true
   }
@@ -496,7 +501,7 @@ async function call(threadId: string) {
       getPrompt(threadId, op)
     )
 
-    // note: TS sees payload as `any`
+    // note: TS sees JSON.parse() as `any`
     const payload = JSON.parse(result ?? "")
 
     const review = schemas[op].safeParse(payload)
