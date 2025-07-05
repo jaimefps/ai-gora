@@ -294,12 +294,12 @@ app.post("/intervene", async (req, res) => {
       return
     }
     /**
-     * todo: validate that the user can intervene; likely require
-     * a PauseMarker at(-1) for any other interventions to be valid:
+     * todo: validate that the user can intervene; require
+     * a Pause at(-1) for any interventions to be valid:
      */
     switch (action.type) {
-      // todo: maybe only allow Puase
-      // if all bots have already ACK
+      // todo: do not allow Pause in
+      // the middle of a swarm call:
       case "pause":
         t.stream.push({
           type: "PauseMarker",
@@ -307,14 +307,24 @@ app.post("/intervene", async (req, res) => {
           sourceId: usrKey,
         })
         break
-      // todo: maybe this just pops the
-      // PauseMarker from the t.stream?
-      // or when t.stream(-1) == RESUME,
+      // todo: dos this pop the
+      // Pause from the stream?
       case "resume":
         t.stream.push({
           type: "ResumeMarker",
           timestamp: Date.now(),
           sourceId: usrKey,
+        })
+        break
+      case "speak":
+        t.stream.push({
+          type: "ThesisSchema",
+          timestamp: Date.now(),
+          sourceId: usrKey,
+          payload: {
+            secret_thoughts: payload.reason,
+            public_response: payload.prompt,
+          },
         })
         break
       // todo: i need to think more about this case;
@@ -338,16 +348,15 @@ app.post("/intervene", async (req, res) => {
           personaId: payload.personaId,
           sourceId: usrKey,
         })
-        break
-      case "speak":
+      // todo: i need to think more about this case;
+      // unclear how the stack of bots is impacted,
+      // likely regenerate the stack:
+      case "dismiss":
         t.stream.push({
-          type: "ThesisSchema",
+          type: "SelectMarker",
           timestamp: Date.now(),
+          personaId: payload.personaId,
           sourceId: usrKey,
-          payload: {
-            secret_thoughts: payload.reason,
-            public_response: payload.prompt,
-          },
         })
         break
     }

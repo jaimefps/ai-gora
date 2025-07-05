@@ -12,13 +12,11 @@ const openai = new OpenAI({
  * ideas:
  *
  * - rename: SchemaEvents => ResponseEvents
- * - enforce uniqueness of useKey and modKey as names
- * - replace types with zods and use to validate the REST layer
- * - allow ACK & VOTE calls to be independent, instead of await P.all()
- * - prompt at the end of each loop if ready to vote?
- * - drag & drop ui allows user to reorder the stack
- * - can't PauseMarker if t.stream is empty
  * - enable retries if call schema response fails
+ * - enforce uniqueness of useKey and modKey as names
+ * - replace more types with zods and use to validate the REST layer
+ * - prompt at the end of each loop if ready to vote? (could us a marker)
+ * - drag & drop ui allows user to reorder the speakers stack
  */
 
 export const usrKey = "AIGORA_INTERNAL_USER" as const
@@ -415,6 +413,7 @@ function halt(threadId: string) {
   if (votes.length === t.personas.length) {
     console.log("-- Halting & Dumping --")
     saveThread(threadId, "dump_results")
+    live.delete(threadId)
     return true
   }
 
