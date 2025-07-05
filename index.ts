@@ -184,30 +184,35 @@ app.post("/personas", (req, res) => {
   }
 })
 
-app.put("/personas/:personaId", (req, res) => {
-  try {
-    const { personaId } = req.params
-    const { name, sys } = req.body
-    const p = store.personas[personaId]
-    if (!p) {
-      res.sendStatus(400)
-      return
-    }
-    const next = {
-      ...p,
-      name: name ?? p.name,
-      sys: sys ?? p.sys,
-    }
-    store.personas[personaId] = next
-    res.json({
-      personaId: personaId,
-      ...next,
-    })
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-  }
-})
+/**
+ * Eventually enable,
+ * not necessary for demo.
+ *
+ */
+// app.put("/personas/:personaId", (req, res) => {
+//   try {
+//     const { personaId } = req.params
+//     const { name, sys } = req.body
+//     const p = store.personas[personaId]
+//     if (!p) {
+//       res.sendStatus(400)
+//       return
+//     }
+//     const next = {
+//       ...p,
+//       name: name ?? p.name,
+//       sys: sys ?? p.sys,
+//     }
+//     store.personas[personaId] = next
+//     res.json({
+//       personaId: personaId,
+//       ...next,
+//     })
+//   } catch (err) {
+//     console.error(err)
+//     res.sendStatus(500)
+//   }
+// })
 
 /**
  * Eventually enable,
@@ -322,8 +327,8 @@ app.post("/intervene", async (req, res) => {
           timestamp: Date.now(),
           sourceId: usrKey,
           payload: {
-            secret_thoughts: action?.payload.reason,
-            public_response: action?.payload.prompt,
+            secret_thoughts: action?.payload.notes,
+            public_response: action?.payload.opinion,
           },
         })
         break

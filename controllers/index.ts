@@ -205,10 +205,10 @@ export const provider = {
   // async gemini() {},
 }
 
-function saveThread(threadId: string, folder: "dump_results" | "dump_errors") {
+function save(threadId: string, folder: "dump_results" | "dump_errors") {
   const t = store.threads[threadId]
   const dir = path.join(__dirname, `../${folder}`)
-  const file = path.join(dir, `${Date.now()}.json`)
+  const file = path.join(dir, `${threadId}_${Date.now()}.json`)
   fs.mkdirSync(dir, { recursive: true })
   fs.writeFileSync(file, JSON.stringify(t, null, 2))
 }
@@ -223,7 +223,7 @@ function crash(threadId: string, msg: string): never {
     timestamp: Date.now(),
     message: str,
   })
-  saveThread(threadId, "dump_errors")
+  save(threadId, "dump_errors")
   throw new Error(str)
 }
 
@@ -406,13 +406,18 @@ function halt(threadId: string) {
 
   // don't halt empty stream or swarm calls; those should
   // finish before breaks; difficult to restore if stopped.
+  const emptyStream = !last
   const isSwarming = last?.type === "LoadMarker" && swarm.has(last.loading)
-  if (!last || isSwarming) return false
+  if (emptyStream || isSwarming) return false
 
+  // if we push more personas into the stack;
+  // then the discussion would resume; even
+  // if votes have been previously tallied.
+  const emptyStack = t.stack.length === 0
   const votes = t.stream.filter((evt) => evt.type === "VoteSchema")
-  if (votes.length === t.personas.length) {
+  if (emptyStack && votes.length >= t.personas.length) {
     console.log("-- Halting & Dumping --")
-    saveThread(threadId, "dump_results")
+    save(threadId, "dump_results")
     live.delete(threadId)
     return true
   }

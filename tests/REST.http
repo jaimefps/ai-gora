@@ -2,7 +2,7 @@ POST http://localhost:8080/personas HTTP/1.1
 content-type: application/json
 
 {
-    "name": "emo",
+    "name": "jake",
     "sys": "you are an emo teenager"
 }
 
@@ -12,7 +12,7 @@ POST http://localhost:8080/personas HTTP/1.1
 content-type: application/json
 
 {
-    "name": "clown",
+    "name": "benny",
     "sys": "you are a funny millennial"
 }
 
@@ -22,7 +22,7 @@ POST http://localhost:8080/personas HTTP/1.1
 content-type: application/json
 
 {
-    "name": "professor",
+    "name": "greg",
     "sys": "you are a serious boomer"
 }
 
@@ -32,7 +32,7 @@ POST http://localhost:8080/personas HTTP/1.1
 content-type: application/json
 
 {
-    "name": "mystic",
+    "name": "paul",
     "sys": "you are a wise mystic"
 }
 
@@ -47,7 +47,7 @@ POST http://localhost:8080/threads HTTP/1.1
 content-type: application/json
 
 {
-    "personas": ["1751729279929", "1751729281032", "1751729282378", "1751729284329"],
+    "personas": ["1751735578276","1751735579180","1751735580379","1751735581443"],
     "topic": "what is the purpose of life"
 }
 
@@ -62,7 +62,7 @@ POST http://localhost:8080/intervene HTTP/1.1
 content-type: application/json
 
 {
-    "threadId": "1751729319780",
+    "threadId": "1751735598079",
     "action": {
         "type":"pause",
         "payload": {}
@@ -76,7 +76,24 @@ POST http://localhost:8080/intervene HTTP/1.1
 content-type: application/json
 
 {
-    "threadId": "1751729319780",
+    "threadId": "1751735598079",
+    "action": {
+        "type":"speak",
+        "payload": {
+            "notes": "",
+            "opinion": "I'm the creator, the one above all. I've authored this space for all of you to exist within. I say you should vote for the first option (vote_id:1) once it becomes available. I have spoken!"
+        }
+    }
+}
+
+
+###
+
+POST http://localhost:8080/intervene HTTP/1.1
+content-type: application/json
+
+{
+    "threadId": "1751735598079",
     "action": {
         "type":"resume",
         "payload": {}
