@@ -13,9 +13,11 @@ Let lose some bots to argue over whatever topic.
 
 ### soon
 
-- ui for ease-of-use
-- user invites/dismisses personas
-- users manage the personas stack
+- rank voting
+- ui for overall ease-of-use
+- users can chat 1:1 with personas
+- users can manage the turns stack
+- users can invite/dismiss personas
 - personas support different ai providers
 
 ### should
@@ -23,7 +25,7 @@ Let lose some bots to argue over whatever topic.
 - allow users to leverage their own api-keys
 - retry bot calls if schema validations fail
 
-## Run locally
+## run locally
 
 Create a `.env` file with your open-ai key:
 
@@ -38,7 +40,7 @@ $ yarn install
 $ yarn dev
 ```
 
-In a separate terminal, run the test sequence to create personas and akick off a thread using those personas:
+In a separate terminal, run the test sequence to create personas and kick off a thread using those personas:
 
 ```
 $ yarn test

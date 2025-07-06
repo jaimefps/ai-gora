@@ -235,6 +235,9 @@ function crash(threadId: string, msg: string): never {
 }
 
 const format = {
+  username(name: string, id: string) {
+    return `${name} (id:${id})`
+  },
   thread(threadId: string) {
     const t = store.threads[threadId]
     return t.stream
@@ -255,8 +258,8 @@ const format = {
         }
         return `
         ------------------------------
-        ${name} (id:${id}): 
-        ${evt.payload.public_response ?? "(nothing to say)"}
+        ${this.username(name, id)}: 
+        ${evt.payload.public_response ?? "(nothing to add at this time)"}
         ------------------------------
         `
       })
@@ -266,8 +269,7 @@ const format = {
     const t = store.threads[threadId]
     const summary = t.stream.find((evt) => evt.type === "SummarySchema")
     if (!summary) crash(threadId, "Failed to find summary")
-
-    const redacted = JSON.stringify(
+    return JSON.stringify(
       summary.payload.ideas.map((idea, idx) => {
         return {
           ...idea,
@@ -279,8 +281,6 @@ const format = {
       null,
       2
     )
-
-    return redacted
   },
   // not needed for demo:
   votes(threadId: string) {
@@ -299,9 +299,8 @@ const compose = {
   moderator(topic: string) {
     return `
     <RULES>
-      Every message directed at you will say in what format you must respond. Failure 
-      to do so results in being removed from the forum. You are only meant to respond 
-      in JSON satisfying these schemas:
+      You must respond *only* in JSON that conforms to the specified schemas. Each incoming 
+      message will indicate which schema applies. Any deviation results in termination.
       <SHARED_SCHEMAS>
         ${getSchemas("shared")}
       </SHARED_SCHEMAS>
@@ -313,14 +312,14 @@ const compose = {
       ${topic}
     </DEBATE>
     <PERSONALITY>
-      You are an impartial moderator facilitating a discussion forum. You won't participate
-      in the overall discussion, you are only a helper that is invoked for analysis, summaries,
-      and other operations required for managing the forum successfully and enabling the personas
-      to effectively discuss the topic at hand among themselves.
+      You are a neutral forum moderator. 
+      You do not engage in the debate directly. 
+      Your sole purpose is to assist with summaries, analysis, structure, and 
+      operational tasks that help maintain order and clarity in the discussion.
     </PERSONALITY>
     `
   },
-  persona(sys: string, topic: string) {
+  persona(botId: string, persona: Persona, topic: string) {
     return `
     <RULES>
       Every message will say in what format you must respond. 
@@ -342,8 +341,11 @@ const compose = {
       agree—disagreement is expected. Speak casually, like a normal person posting in a forum. You can be blunt, 
       pushy, even crass, if it fits your style. You're trying to convince people, not necessarily play nice. Eventually
       a moderator will submit a list of ideas that came up during the thread, and you will all vote on what answer you think
-      is best. And most importantly, you are:
-      ${sys}
+      is best. And most importantly, you are "${format.username(
+        persona.name,
+        botId
+      )}":
+      ${persona.sys}
     </PERSONALITY>
     `
   },
@@ -470,7 +472,8 @@ function getSys(botId: string | typeof modKey, topic: string) {
   }
   const p = store.personas[botId]
   if (!p) throw new Error(`Invalid personaId: ${botId}`)
-  return compose.persona(p.sys, topic)
+  // return compose.persona(p.sys, topic, p.name, botId)
+  return compose.persona(botId, p, topic)
 }
 
 function getPrompt(threadId: string, schema: SchemaName) {
