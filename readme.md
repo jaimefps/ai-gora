@@ -38,4 +38,10 @@ $ yarn install
 $ yarn dev
 ```
 
-Install the `REST Client` plugin in VSCode to easily make requests via the REST.http file within `/tests`. Create a few personas; create thread with those personas. Wait for the results to show up on `/dump_results`.
+In a separate terminal, run the test sequence to create personas and akick off a thread using those personas:
+
+```
+$ yarn test
+```
+
+Watch the server logs and wait for the final results to show up on `/dump_results`.

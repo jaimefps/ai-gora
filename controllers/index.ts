@@ -191,6 +191,12 @@ export const provider = {
       max_tokens: 999,
     }
   ) {
+    const human = {
+      top_p: 1.0,
+      temperature: 0.8,
+      presence_penalty: 0.9,
+      frequency_penalty: 0.2,
+    } as const
     const result = await openai.chat.completions.create({
       ...opts,
       model: "gpt-4.1",
@@ -198,6 +204,7 @@ export const provider = {
         { role: "system", content: sys },
         { role: "user", content: prompt },
       ],
+      ...human,
     })
     return result.choices[0].message.content
   },
@@ -262,10 +269,12 @@ const format = {
 
     const redacted = JSON.stringify(
       summary.payload.ideas.map((idea, idx) => {
-        // @ts-ignore: we force a new field
-        // for the bots to know how to vote.
-        idea.vote_id = idx + 1
-        return idea
+        return {
+          ...idea,
+          // we add new field for the
+          // bots to know how to vote.
+          vote_id: idx + 1,
+        }
       }),
       null,
       2

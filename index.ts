@@ -303,8 +303,6 @@ app.post("/intervene", async (req, res) => {
      * a Pause at(-1) for any interventions to be valid:
      */
     switch (action.type) {
-      // todo: do not allow Pause in
-      // the middle of a swarm call:
       case "pause":
         t.stream.push({
           type: "PauseMarker",
@@ -312,7 +310,7 @@ app.post("/intervene", async (req, res) => {
           sourceId: usrKey,
         })
         break
-      // todo: dos this pop the
+      // todo: does this pop the
       // Pause from the stream?
       case "resume":
         t.stream.push({
@@ -320,7 +318,9 @@ app.post("/intervene", async (req, res) => {
           timestamp: Date.now(),
           sourceId: usrKey,
         })
+        exec(threadId)
         break
+      // last evt must be Pause or usrKey Thesis
       case "speak":
         t.stream.push({
           type: "ThesisSchema",
@@ -328,7 +328,7 @@ app.post("/intervene", async (req, res) => {
           sourceId: usrKey,
           payload: {
             secret_thoughts: action?.payload.notes,
-            public_response: action?.payload.opinion,
+            public_response: action?.payload.message,
           },
         })
         break
@@ -365,9 +365,6 @@ app.post("/intervene", async (req, res) => {
         })
         break
     }
-
-    exec(threadId)
-
     res.json({
       threadId,
       ...t,
