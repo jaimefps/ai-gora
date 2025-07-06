@@ -15,15 +15,16 @@ Let lose some bots to argue over whatever topic.
 
 - rank voting
 - ui for overall ease-of-use
+- users can manage the turn stack
 - users can chat 1:1 with personas
-- users can manage the turns stack
 - users can invite/dismiss personas
 - personas support different ai providers
-
-### should
-
 - allow users to leverage their own api-keys
 - retry bot calls if schema validations fail
+
+### maybe
+
+- backdoor scheming between personas
 
 ## run locally
 

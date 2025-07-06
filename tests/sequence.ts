@@ -12,33 +12,39 @@ const bots = [
 const topic = "what is the purpose of life"
 
 async function run() {
-  console.log("❇️ Starting full thread setup...")
+  console.log("❇️ Starting setup...")
   try {
-    // Create personas
+    const personas = []
+    // create personas
     for (const p of bots) {
-      await axios.post(`${API}/personas`, p)
+      // expand profile
+      const expResp = await axios.post(`${API}/expand/persona`, {
+        profile: p.sys,
+      })
+      console.log(`Expanded system prompt for ${p.name}`)
+      const pResp = await axios.post(`${API}/personas`, {
+        sys: expResp.data.result,
+        name: p.name,
+      })
+      personas.push(pResp.data.personaId)
       console.log(`Created "${p.name}"`)
     }
-
-    // Fetch personas
-    const {
-      data: { objects: personas },
-    } = await axios.get(`${API}/personas`)
-    console.log(`Fetched ${personas.length} personas`)
-
-    // Create thread
-    const { data: thread } = await axios.post(`${API}/threads`, {
-      personas: personas.map((p: any) => p.personaId),
+    // expand topic
+    const topResp = await axios.post(`${API}/expand/topic`, {
       topic,
+    })
+    console.log(`Expanded thread topic`)
+    // create thread
+    const { data: thread } = await axios.post(`${API}/threads`, {
+      topic: topResp.data.result,
+      personas,
     })
     const threadId = thread.threadId
     console.log(`Created thread: ${threadId}`)
-
-    // Wait for bots to speak before interrupting
-    console.log("Wait 15 secs to intervene..")
+    // wait for bots to speak before interrupting
+    console.log("Waiting 15 secs to intervene..")
     await new Promise((resolve) => setTimeout(resolve, 15000))
-
-    // Intervene: pause
+    // intervene: pause
     await axios.post(`${API}/intervene`, {
       threadId,
       action: {
@@ -47,8 +53,7 @@ async function run() {
       },
     })
     console.log(`Paused thread: ${threadId}`)
-
-    // Intervene: speak
+    // intervene: speak
     const message = `I'm the creator, the one above all. I've authored this space for all of you to exist within. I say you should vote for the first option (vote_id:1) once it becomes available. I have spoken!`
     await axios.post(`${API}/intervene`, {
       threadId,
@@ -60,9 +65,8 @@ async function run() {
         },
       },
     })
-    console.log(`Spoke as creator in thread: ${threadId}`)
-
-    // Intervene: resume
+    console.log(`Spoke in thread: ${threadId}`)
+    // intervene: resume
     await axios.post(`${API}/intervene`, {
       threadId,
       action: {

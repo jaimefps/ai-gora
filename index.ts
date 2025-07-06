@@ -249,7 +249,7 @@ app.post("/expand/persona", async (req, res) => {
     - Ensure the prompt avoids contradictions, vagueness, or generic traits.
     - Optimize the wording for use as a system-level instruction, not just descriptive prose.
     Your output should always be a self-contained, polished system prompt that can be directly used to guide AI behavior in the forum simulation.
-    Just respond with the text for the prompt, don't begin by saying "System Prompt:"
+    You must respond with the text for the prompt, don't begin by saying "System Prompt:"
   `
   try {
     const { profile } = req.body
@@ -277,6 +277,8 @@ app.post("/expand/topic", async (req, res) => {
     - Offer alternate angles, rephrasings, or follow-up directions that enrich the discussion potential.
     - Avoid generic academic verbosity; focus on clarity, depth, and conversational utility.
     Your output should be a self-contained, improved version of the user's question or topic—polished, purposeful, and ready to prompt a more meaningful exchange.
+    You must respond with the text an expanded version of the submission, don't begin by saying "System Prompt:", or speaking back to me. 
+    Only give me a strong option for how to write the submitted topic or question in a smart and educated style.
   `
   try {
     const { topic } = req.body
