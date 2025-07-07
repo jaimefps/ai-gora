@@ -22,25 +22,64 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   )
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
 
-  const loadThread = useCallback(async () => {
-    try {
-      setLoading(true)
-      const [threadData, personasData] = await Promise.all([
-        api.getThread(threadId),
-        api.getPersonas(),
-      ])
-      setThread(threadData)
-      setPersonas(personasData)
-    } catch (error) {
-      console.error("Failed to load thread:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [threadId])
+  const loadThread = useCallback(
+    async (showLoading = true) => {
+      try {
+        if (showLoading) {
+          setLoading(true)
+        }
+        const [threadData, personasData] = await Promise.all([
+          api.getThread(threadId),
+          api.getPersonas(),
+        ])
+        setThread(threadData)
+        setPersonas(personasData)
+      } catch (error) {
+        console.error("Failed to load thread:", error)
+      } finally {
+        if (showLoading) {
+          setLoading(false)
+        }
+      }
+    },
+    [threadId]
+  )
 
   useEffect(() => {
     loadThread()
   }, [loadThread])
+
+  // Polling effect for real-time updates when thread is active
+  useEffect(() => {
+    if (!thread) return
+
+    // Check if thread is active
+    const voteCount = thread.stream.filter(
+      (event) => event.type === "VoteSchema"
+    ).length
+    const isFinished = voteCount >= thread.personas.length
+
+    const findLastMarkerIndex = (markerType: string) => {
+      for (let i = thread.stream.length - 1; i >= 0; i--) {
+        if (thread.stream[i].type === markerType) return i
+      }
+      return -1
+    }
+    const lastPauseIndex = findLastMarkerIndex("PauseMarker")
+    const lastResumeIndex = findLastMarkerIndex("ResumeMarker")
+    const isPaused = lastPauseIndex !== -1 && lastPauseIndex > lastResumeIndex
+
+    const isActive = !isPaused && !isFinished
+
+    // Only poll if thread is active
+    if (!isActive) return
+
+    const interval = setInterval(() => {
+      loadThread(false)
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [thread, loadThread])
 
   const handlePause = async () => {
     try {
@@ -220,18 +259,23 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       }
     })
 
-    // Check if the last event is a LoadMarker with loading:ThesisSchema
+    // Check if the last event is a LoadMarker with loading:ThesisSchema or VoteSchema
     if (thread.stream.length > 0) {
       const lastEvent = thread.stream[thread.stream.length - 1]
-      if (
-        lastEvent.type === "LoadMarker" &&
-        lastEvent.loading === "ThesisSchema"
-      ) {
-        chatMessages.push({
-          type: "thinking",
-          personaId: lastEvent.botId,
-          timestamp: lastEvent.timestamp,
-        })
+      if (lastEvent.type === "LoadMarker") {
+        if (lastEvent.loading === "ThesisSchema") {
+          chatMessages.push({
+            type: "thinking",
+            personaId: lastEvent.botId,
+            timestamp: lastEvent.timestamp,
+          })
+        } else if (lastEvent.loading === "VoteSchema") {
+          chatMessages.push({
+            type: "voting",
+            personaId: lastEvent.botId,
+            timestamp: lastEvent.timestamp,
+          })
+        }
       }
     }
 
@@ -249,7 +293,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             display: "flex",
             flexDirection: "column",
             marginBottom: "1rem",
-            alignItems: "center",
+            alignItems: "flex-start",
           }}
         >
           <div
@@ -265,7 +309,36 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               opacity: 0.7,
             }}
           >
-            {getPersonaName(message.personaId)} is thinking...
+            {getPersonaName(message.personaId)} is writing...
+          </div>
+        </div>
+      )
+    } else if (message.type === "voting") {
+      // Voting message bubble (very understated)
+      return (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem",
+            alignItems: "flex-start",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "transparent",
+              color: "var(--text-muted)",
+              padding: "0.5rem 1rem",
+              borderRadius: "16px",
+              fontSize: "0.75rem",
+              fontStyle: "italic",
+              maxWidth: "70%",
+              textAlign: "center",
+              opacity: 0.7,
+            }}
+          >
+            {getPersonaName(message.personaId)} is voting...
           </div>
         </div>
       )
@@ -456,6 +529,29 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                                   fontSize: "0.7rem",
                                   fontWeight: "500",
                                   whiteSpace: "nowrap",
+                                  cursor: author === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
+                                  transition: "opacity 0.2s ease",
+                                }}
+                                onClick={() => {
+                                  if (author !== "AIGORA_INTERNAL_USER") {
+                                    // Try to find by ID first, then by name
+                                    const personaById = personas.find((p) => p.personaId === author);
+                                    const personaByName = personas.find((p) => p.name === author);
+                                    const persona = personaById || personaByName;
+                                    if (persona) {
+                                      setSelectedPersona(persona);
+                                    }
+                                  }
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (author !== "AIGORA_INTERNAL_USER") {
+                                    e.currentTarget.style.opacity = "0.8";
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (author !== "AIGORA_INTERNAL_USER") {
+                                    e.currentTarget.style.opacity = "1";
+                                  }
                                 }}
                               >
                                 {displayName}
@@ -540,27 +636,36 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     fontSize: "0.875rem",
                     color: "var(--text-primary)",
                     lineHeight: "1",
-                    cursor: message.personaId === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
-                    textDecoration: message.personaId === "AIGORA_INTERNAL_USER" ? "none" : "underline",
+                    cursor:
+                      message.personaId === "AIGORA_INTERNAL_USER"
+                        ? "default"
+                        : "pointer",
+                    textDecoration:
+                      message.personaId === "AIGORA_INTERNAL_USER"
+                        ? "none"
+                        : "underline",
                     textDecorationColor: "transparent",
                     transition: "text-decoration-color 0.2s ease",
                   }}
                   onClick={() => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      const persona = personas.find((p) => p.personaId === message.personaId);
+                      const persona = personas.find(
+                        (p) => p.personaId === message.personaId
+                      )
                       if (persona) {
-                        setSelectedPersona(persona);
+                        setSelectedPersona(persona)
                       }
                     }
                   }}
                   onMouseEnter={(e) => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      e.currentTarget.style.textDecorationColor = "var(--text-primary)";
+                      e.currentTarget.style.textDecorationColor =
+                        "var(--text-primary)"
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      e.currentTarget.style.textDecorationColor = "transparent";
+                      e.currentTarget.style.textDecorationColor = "transparent"
                     }
                   }}
                 >
@@ -686,27 +791,36 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     fontWeight: "600",
                     fontSize: "0.875rem",
                     color: "var(--text-primary)",
-                    cursor: message.personaId === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
-                    textDecoration: message.personaId === "AIGORA_INTERNAL_USER" ? "none" : "underline",
+                    cursor:
+                      message.personaId === "AIGORA_INTERNAL_USER"
+                        ? "default"
+                        : "pointer",
+                    textDecoration:
+                      message.personaId === "AIGORA_INTERNAL_USER"
+                        ? "none"
+                        : "underline",
                     textDecorationColor: "transparent",
                     transition: "text-decoration-color 0.2s ease",
                   }}
                   onClick={() => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      const persona = personas.find((p) => p.personaId === message.personaId);
+                      const persona = personas.find(
+                        (p) => p.personaId === message.personaId
+                      )
                       if (persona) {
-                        setSelectedPersona(persona);
+                        setSelectedPersona(persona)
                       }
                     }
                   }}
                   onMouseEnter={(e) => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      e.currentTarget.style.textDecorationColor = "var(--text-primary)";
+                      e.currentTarget.style.textDecorationColor =
+                        "var(--text-primary)"
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (message.personaId !== "AIGORA_INTERNAL_USER") {
-                      e.currentTarget.style.textDecorationColor = "transparent";
+                      e.currentTarget.style.textDecorationColor = "transparent"
                     }
                   }}
                 >
@@ -1062,7 +1176,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       )}
 
       {selectedPersona && (
-        <PersonaModal 
+        <PersonaModal
           persona={selectedPersona}
           onClose={() => setSelectedPersona(null)}
         />
