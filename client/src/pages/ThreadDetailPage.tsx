@@ -1,10 +1,50 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import { api } from "../api"
 import type { Thread, Persona } from "../types"
 import { PersonaModal } from "../components/PersonaModal"
 
 interface ThreadDetailPageProps {
   threadId: string
+}
+
+const useScrollBehavior = (length: number, finished?: boolean) => {
+  const [autoScroll, setAutoScroll] = useState(!finished)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const lastScrollTop = useRef(0)
+
+  const handleScroll = (e) => {
+    const target = e.target
+    const st = target.scrollTop
+    const isAtBottom =
+      target.scrollHeight - target.scrollTop - target.clientHeight < 10
+
+    if (st > lastScrollTop.current) {
+      if (isAtBottom) {
+        setAutoScroll(true)
+      }
+    } else if (st < lastScrollTop.current) {
+      setAutoScroll(false)
+    }
+
+    lastScrollTop.current = st <= 0 ? 0 : st
+  }
+
+  useEffect(() => {
+    if (containerRef.current) {
+      if (autoScroll) {
+        containerRef.current.scrollTo({
+          top: containerRef.current.scrollHeight,
+          behavior: "smooth",
+        })
+      }
+    }
+  }, [length, autoScroll])
+
+  return {
+    handleScroll,
+    chatRef: containerRef,
+  }
 }
 
 export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
@@ -122,6 +162,19 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
     }
   }
 
+  // Count VoteSchemas to check if discussion is finished
+  const voteCount = thread?.stream.filter(
+    (event) => event.type === "VoteSchema"
+  ).length
+
+  const isFinished =
+    voteCount !== undefined && voteCount >= (thread?.personas.length ?? 0)
+
+  const { chatRef, handleScroll } = useScrollBehavior(
+    thread?.stream?.length ?? 0,
+    isFinished
+  )
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
@@ -147,12 +200,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
     }
     return -1
   }
-
-  // Count VoteSchemas to check if discussion is finished
-  const voteCount = thread.stream.filter(
-    (event) => event.type === "VoteSchema"
-  ).length
-  const isFinished = voteCount >= thread.personas.length
 
   const lastPauseIndex = findLastMarkerIndex("PauseMarker")
   const lastResumeIndex = findLastMarkerIndex("ResumeMarker")
@@ -529,28 +576,35 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                                   fontSize: "0.7rem",
                                   fontWeight: "500",
                                   whiteSpace: "nowrap",
-                                  cursor: author === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
+                                  cursor:
+                                    author === "AIGORA_INTERNAL_USER"
+                                      ? "default"
+                                      : "pointer",
                                   transition: "opacity 0.2s ease",
                                 }}
                                 onClick={() => {
                                   if (author !== "AIGORA_INTERNAL_USER") {
                                     // Try to find by ID first, then by name
-                                    const personaById = personas.find((p) => p.personaId === author);
-                                    const personaByName = personas.find((p) => p.name === author);
-                                    const persona = personaById || personaByName;
+                                    const personaById = personas.find(
+                                      (p) => p.personaId === author
+                                    )
+                                    const personaByName = personas.find(
+                                      (p) => p.name === author
+                                    )
+                                    const persona = personaById || personaByName
                                     if (persona) {
-                                      setSelectedPersona(persona);
+                                      setSelectedPersona(persona)
                                     }
                                   }
                                 }}
                                 onMouseEnter={(e) => {
                                   if (author !== "AIGORA_INTERNAL_USER") {
-                                    e.currentTarget.style.opacity = "0.8";
+                                    e.currentTarget.style.opacity = "0.8"
                                   }
                                 }}
                                 onMouseLeave={(e) => {
                                   if (author !== "AIGORA_INTERNAL_USER") {
-                                    e.currentTarget.style.opacity = "1";
+                                    e.currentTarget.style.opacity = "1"
                                   }
                                 }}
                               >
@@ -1024,6 +1078,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
 
         {viewMode === "chat" ? (
           <div
+            ref={chatRef}
+            onScroll={handleScroll}
             style={{
               backgroundColor: "var(--bg-tertiary)",
               padding: "1.5rem",
@@ -1037,9 +1093,13 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               gap: "0.5rem",
             }}
           >
-            {processStreamEvents().map((message, index) =>
-              renderChatMessage(message, index)
-            )}
+            {processStreamEvents().map((message, index) => {
+              return (
+                <div key={`${message.timestamp}_${index}`}>
+                  {renderChatMessage(message, index)}
+                </div>
+              )
+            })}
           </div>
         ) : (
           <pre
