@@ -360,12 +360,63 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                       </div>
                       <div
                         style={{
-                          fontSize: "0.75rem",
-                          opacity: 0.8,
-                          fontStyle: "italic",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          flexWrap: "wrap",
+                          marginTop: "0.5rem",
                         }}
                       >
-                        Authors: {idea.authors.join(", ")}
+                        <span
+                          style={{
+                            fontSize: "0.75rem",
+                            opacity: 0.8,
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Authors:
+                        </span>
+                        {idea.authors.map(
+                          (author: string, authorIndex: number) => {
+                            // Handle the special case where author might be a persona name instead of ID
+                            let displayName = author
+                            if (author === "AIGORA_INTERNAL_USER") {
+                              displayName = "You"
+                            } else {
+                              // Try to find by ID first, then by name
+                              const personaById = personas.find(
+                                (p) => p.personaId === author
+                              )
+                              const personaByName = personas.find(
+                                (p) => p.name === author
+                              )
+                              if (personaById) {
+                                displayName = personaById.name
+                              } else if (personaByName) {
+                                displayName = personaByName.name
+                              } else {
+                                displayName = author // Use the original value if no match found
+                              }
+                            }
+
+                            return (
+                              <span
+                                key={authorIndex}
+                                style={{
+                                  backgroundColor: "#6366f1",
+                                  color: "white",
+                                  padding: "0.25rem 0.5rem",
+                                  borderRadius: "12px",
+                                  fontSize: "0.7rem",
+                                  fontWeight: "500",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {displayName}
+                              </span>
+                            )
+                          }
+                        )}
                       </div>
                     </div>
                   ))}
@@ -384,7 +435,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       const voteText =
         message.voteId === null
           ? "abstained from voting"
-          : `voted for idea #${message.voteId}`
+          : `voted for #${message.voteId}`
 
       return (
         <div
