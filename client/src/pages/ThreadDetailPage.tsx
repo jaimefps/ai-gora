@@ -122,6 +122,9 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
 
   // Helper function to get persona name from ID
   const getPersonaName = (personaId: string): string => {
+    if (personaId === "AIGORA_INTERNAL_USER") {
+      return "You"
+    }
     const persona = personas.find((p) => p.personaId === personaId)
     return persona ? persona.name : "Unknown"
   }
@@ -455,7 +458,10 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                   lineHeight: "1",
                 }}
               >
-                #{message.personaId.slice(-6)}
+                #
+                {message.personaId === "AIGORA_INTERNAL_USER"
+                  ? "AIGORA_INTERNAL_USER"
+                  : message.personaId.slice(-6)}
               </span>
 
               {/* Vote */}
@@ -563,7 +569,10 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     fontFamily: "monospace",
                   }}
                 >
-                  #{message.personaId.slice(-6)}
+                  #
+                  {message.personaId === "AIGORA_INTERNAL_USER"
+                    ? "AIGORA_INTERNAL_USER"
+                    : message.personaId.slice(-6)}
                 </span>
                 {message.privateThoughts && (
                   <button

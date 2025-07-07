@@ -20,15 +20,28 @@ export const ThreadsPage: React.FC<ThreadsPageProps> = ({ onNavigate }) => {
     loadThreads()
   }, [])
 
-  const loadThreads = async () => {
+  // Polling effect for real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadThreads(false)
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const loadThreads = async (showLoading = true) => {
     try {
-      setLoading(true)
+      if (showLoading) {
+        setLoading(true)
+      }
       const data = await api.getThreads()
       setThreads(data)
     } catch (error) {
       console.error("Failed to load threads:", error)
     } finally {
-      setLoading(false)
+      if (showLoading) {
+        setLoading(false)
+      }
     }
   }
 

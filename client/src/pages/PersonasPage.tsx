@@ -17,15 +17,28 @@ export const PersonasPage: React.FC = () => {
     loadPersonas();
   }, []);
 
-  const loadPersonas = async () => {
+  // Polling effect for real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadPersonas(false);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadPersonas = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       const data = await api.getPersonas();
       setPersonas(data);
     } catch (error) {
       console.error('Failed to load personas:', error);
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 
