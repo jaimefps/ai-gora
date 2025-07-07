@@ -637,45 +637,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         <h1 style={{ fontSize: "2rem", fontWeight: 600, marginBottom: "1rem" }}>
           {thread.topic}
         </h1>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            color: "var(--text-secondary)",
-            fontSize: "0.875rem",
-          }}
-        >
-          <span>ID: {thread.threadId}</span>
-          <span>•</span>
-          <span>{thread.personas.length} personas</span>
-          <span>•</span>
-          <span>{thread.stream.length} events</span>
-          <span>•</span>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <div
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: isFinished
-                  ? "var(--warning)"
-                  : isActive
-                  ? "var(--accent)"
-                  : "var(--text-muted)",
-              }}
-            />
-            <span>
-              {isFinished ? "Finished" : isActive ? "Active" : "Paused"}
-            </span>
-          </div>
-        </div>
       </div>
 
       <div className="card">
@@ -687,15 +648,56 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             marginBottom: "1rem",
           }}
         >
-          <h2
-            style={{
-              fontSize: "1.25rem",
-              fontWeight: 600,
-              margin: 0,
-            }}
-          >
-            Chat
-          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <h2
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: 600,
+                margin: 0,
+              }}
+            >
+              Chat
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                color: "var(--text-secondary)",
+                fontSize: "0.75rem",
+              }}
+            >
+              <span>ID: {thread.threadId}</span>
+              <span>•</span>
+              <span>{thread.personas.length} personas</span>
+              <span>•</span>
+              <span>{thread.stream.length} events</span>
+              <span>•</span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
+                    backgroundColor: isFinished
+                      ? "var(--warning)"
+                      : isActive
+                      ? "var(--accent)"
+                      : "var(--text-muted)",
+                  }}
+                />
+                <span>
+                  {isFinished ? "Finished" : isActive ? "Active" : "Paused"}
+                </span>
+              </div>
+            </div>
+          </div>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               onClick={() => setViewMode("chat")}
