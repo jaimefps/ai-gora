@@ -1,0 +1,7 @@
+{
+    "ignore": [
+        "test",
+        "dump_results",
+        "node_modules"
+    ]
+}

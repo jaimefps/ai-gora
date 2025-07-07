@@ -1,0 +1,156 @@
+{
+  "topic": "What are the primary factors individuals should consider when deciding whether to attend college immediately after high school, versus pursuing alternative paths such as vocational training, entering the workforce, or taking a gap year? How do changing economic conditions, the rising cost of higher education, and evolving job market demands influence the value and relevance of a traditional college degree today?",
+  "personas": [
+    "1751830110195",
+    "1751830203330"
+  ],
+  "stream": [
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830229467,
+      "loading": "AckSchema",
+      "botId": "1751830110195"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830229470,
+      "loading": "AckSchema",
+      "botId": "1751830203330"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751830110195",
+      "timestamp": 1751830229906,
+      "payload": "ACK"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751830203330",
+      "timestamp": 1751830229977,
+      "payload": "ACK"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830230229,
+      "loading": "ThesisSchema",
+      "botId": "1751830110195"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751830110195",
+      "timestamp": 1751830239530,
+      "payload": {
+        "secret_thoughts": "Ugh, why does everyone act like going straight to college is the only real option? It’s just a way for adults to judge you if you don’t follow their path. Honestly, college is stupid expensive, and it feels like a scam sometimes. But whatever—everyone gets so dramatic about 'finding yourself' with gap years or acting like trades are a last resort. I guess I feel kinda left out when people already know what they want, cause I have no clue… but admitting that sounds weak.",
+        "public_response": "Yeah, okay, so apparently we’re all supposed to just jump into college after high school, rack up tons of debt, and pray there’s some magical job waiting for us after. As if! With how much it costs now, you really gotta ask if it’s even worth it. Trades or just working right away actually make sense if you want money instead of just sitting in classrooms forever. And gap years? Sure, go travel or whatever rich kid stuff—but not everyone can do that. The world changes fast, jobs disappear, and half those degrees mean nothing by the time you graduate anyway. People need to chill with the whole 'college is everything' attitude."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830239784,
+      "loading": "ThesisSchema",
+      "botId": "1751830203330"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751830203330",
+      "timestamp": 1751830250077,
+      "payload": {
+        "secret_thoughts": "Bobby is raising some valid concerns about the cost of college, the uncertainty of job prospects after graduation, and the fact that vocational paths or directly entering the workforce can be practical and rewarding. There's also a bit of skepticism about gap years. I want to acknowledge his points, but also clarify that while higher education isn’t for everyone, it still offers significant benefits for many, especially long-term. My response needs to affirm the value in all options, stress self-reflection, and push back against dismissing college outright.",
+        "public_response": "I hear you, Bobby—it’s absolutely true that college isn’t a magic ticket anymore, especially with how expensive it’s gotten. You’re right: trades and immediate work can be smart moves and lead to good careers—sometimes faster and with less debt. But I’d caution against writing off college entirely. While not every degree leads straight to a dream job, data still shows people with degrees tend to earn more over their lifetimes on average, and some industries really do require them.\n\nIt’s less about ‘college is everything’ and more about ‘what fits your goals, strengths, and situation.’ If you love working with your hands or want stability quickly, there’s no shame in apprenticeships or jumping into the workforce. If you’re aiming for fields like engineering or healthcare, skipping college shuts those doors.\n\nAnd about gap years—not just for ‘rich kid stuff.’ Plenty of students use that time to work, save money, or figure out what they actually care about before committing big bucks (and years) to school. Bottom line: None of these options is automatically better than the others. What matters is figuring out what makes sense for you—and not just following the crowd."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830250331,
+      "loading": "ThesisSchema",
+      "botId": "1751830110195"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751830110195",
+      "timestamp": 1751830256734,
+      "payload": {
+        "secret_thoughts": "Of course someone has to bring up stats about lifetime earnings. Like, who cares? That doesn't help if you can't even afford rent right now, let alone wait thirty years for some 'average' to mean anything to you. And yeah, obviously doctors need college, but not everyone wants to be a doctor or an engineer. Feels like whenever I say college is overrated, someone says I'm just afraid of hard work or something. As for gap years, sure—some people can save money, but most end up working crappy jobs anyway, so what’s the difference?",
+        "public_response": "Cool, pricila, but it just sounds like more of the same 'studies show' stuff adults always throw at us. Like I’m supposed to care about what some chart says when rent is insane and everything costs double what it used to. Plus half those jobs that 'require' a degree end up not paying that well anymore since everyone’s got a piece of paper now. Not all of us want to be stuck in school forever just waiting for life to start—some of us want money now instead of making some imaginary plan for 'lifetime earnings.' And about gap years—yeah, right, most people I know just end up flipping burgers, not soul-searching in Europe."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830256987,
+      "loading": "ThesisSchema",
+      "botId": "1751830203330"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751830203330",
+      "timestamp": 1751830267995,
+      "payload": {
+        "secret_thoughts": "Bobby is clearly frustrated with the traditional narrative around college, and his points about cost and real-life pressures are valid. But he’s also oversimplifying the landscape—there are plenty of paths in between ‘college forever’ and ‘immediate money,’ and some degrees do still offer more stability or long-term benefits than jumping into work straight out of high school. He’s also dismissing gap years as something only for wealthy kids, when in reality, a lot of students use them to build up savings or gain life experience (even if it’s working locally). I need to acknowledge these frustrations while steering him back toward seeing that no one-size-fits-all path exists, and that thoughtful planning—rather than writing off education altogether—is still important.",
+        "public_response": "Fair enough, Bobby. You’re right—the world isn’t what it was twenty years ago, and rent or groceries don’t care what your degree says. And it’s 100% true: Not everyone wants—or needs—to slog through four extra years of classes if they can start earning now. Honestly, flipping burgers, working retail, or doing something hands-on for a year or two can teach you a lot about grit, responsibility, even what you *don’t* want to do long term. That’s just as valuable as any European gap year (which most people can’t afford anyway).\n\nBut here’s where I’d push back: Short-term cash is tempting, but sometimes those quick jobs top out fast—meaning you might hit a ceiling early on. If you *know* what you want and it doesn’t require college? Awesome. Go for it! But if you’re unsure, investing some time (not always four years—it could be community college or trade school) can keep more doors open longer.\n\nI’m not saying ‘everyone must go to college’—just think bigger picture if you can. Sometimes hustling now is great; other times, delaying immediate gratification pays off later. The key is being honest about what fits your goals—and making sure short-term decisions aren’t locking you out of options down the road."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830268248,
+      "loading": "SummarySchema",
+      "botId": "AIGORA_INTERNAL_MODERATOR"
+    },
+    {
+      "type": "SummarySchema",
+      "sourceId": "AIGORA_INTERNAL_MODERATOR",
+      "timestamp": 1751830275777,
+      "payload": {
+        "ideas": [
+          {
+            "thesis_body": "The traditional expectation to attend college immediately after high school is increasingly questionable due to the rising cost of higher education, uncertain job prospects for degree holders, and the growing value of alternative paths such as trades, immediate workforce entry, or even gap years. Individuals should prioritize financial realities, personal career goals, and rapidly changing economic conditions when deciding their next step.",
+            "thesis_name": "Questioning Automatic College Enrollment",
+            "authors": [
+              "bobby"
+            ]
+          },
+          {
+            "thesis_body": "While the costs and risks associated with college are real, higher education still provides long-term benefits for many individuals, especially in fields where degrees are required and can lead to greater lifetime earnings. The decision should be personalized—based on individual strengths, life goals, and circumstances—with recognition that alternatives like vocational training or entering the workforce offer valid routes to success. Options like community college or trade schools may also serve as middle ground.",
+            "thesis_name": "Personalized Pathways: Evaluating College Versus Alternatives",
+            "authors": [
+              "pricila"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830276029,
+      "loading": "VoteSchema",
+      "botId": "1751830110195"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751830276030,
+      "loading": "VoteSchema",
+      "botId": "1751830203330"
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751830203330",
+      "timestamp": 1751830279054,
+      "payload": {
+        "secret_thoughts": "Bobby makes important points about the real financial strain and how college isn’t always the golden ticket, but his stance is a bit too dismissive of education’s long-term value and ignores the nuance that not all career doors stay open without a degree. My own thesis better balances those realities—addressing costs, risks, AND benefits, while emphasizing personalized decisions and validation for vocational routes or community college. It’s more realistic and supportive to encourage self-awareness and flexibility.",
+        "vote_id": 2
+      }
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751830110195",
+      "timestamp": 1751830279193,
+      "payload": {
+        "secret_thoughts": "Whatever, like obviously my point is more real. All these adults and 'studies' just don't get how messed up things are for our generation. Why should we keep playing by their rules when college isn’t some golden ticket anymore? I don’t want to wait forever for life to start or drown in debt hoping it all works out. People need to wake up and see that maybe the old path doesn’t work now. Not voting for pricila’s sugarcoated compromise.",
+        "vote_id": 1
+      }
+    }
+  ],
+  "stack": [],
+  "config": {
+    "delay": 250
+  }
+}
