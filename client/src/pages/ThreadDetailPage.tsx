@@ -218,18 +218,28 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       }
     })
 
+    // Check if the last event is a LoadMarker with loading:ThesisSchema
+    if (thread.stream.length > 0) {
+      const lastEvent = thread.stream[thread.stream.length - 1]
+      if (
+        lastEvent.type === "LoadMarker" &&
+        lastEvent.loading === "ThesisSchema"
+      ) {
+        chatMessages.push({
+          type: "thinking",
+          personaId: lastEvent.botId,
+          timestamp: lastEvent.timestamp,
+        })
+      }
+    }
+
     return chatMessages
   }
 
   // Helper function to render individual chat messages
   const renderChatMessage = (message: any, index: number) => {
-    if (message.type === "wakeup") {
-      // Wakeup/Awake message bubble (centered)
-      const messageText =
-        message.status === "waking"
-          ? `${getPersonaName(message.personaId)} is waking up...`
-          : `${getPersonaName(message.personaId)} is awake and ready`
-
+    if (message.type === "thinking") {
+      // Thinking message bubble (very understated)
       return (
         <div
           key={index}
@@ -238,6 +248,40 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             flexDirection: "column",
             marginBottom: "1rem",
             alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "transparent",
+              color: "var(--text-muted)",
+              padding: "0.5rem 1rem",
+              borderRadius: "16px",
+              fontSize: "0.75rem",
+              fontStyle: "italic",
+              maxWidth: "70%",
+              textAlign: "center",
+              opacity: 0.7,
+            }}
+          >
+            {getPersonaName(message.personaId)} is thinking...
+          </div>
+        </div>
+      )
+    } else if (message.type === "wakeup") {
+      // Wakeup/Awake message bubble (left-aligned)
+      const messageText =
+        message.status === "waking"
+          ? `${getPersonaName(message.personaId)} is waking up...`
+          : `${getPersonaName(message.personaId)} is ready!`
+
+      return (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem",
+            alignItems: "flex-start",
           }}
         >
           <div
@@ -561,6 +605,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       )
     } else if (message.type === "thesis") {
       const isExpanded = expandedThoughts.has(index)
+      const isUserMessage = message.personaId === "AIGORA_INTERNAL_USER"
 
       // Thesis message bubble with accordion
       return (
@@ -583,13 +628,17 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
           >
             <div
               style={{
-                backgroundColor: "var(--bg-secondary)",
+                backgroundColor: isUserMessage
+                  ? "#1e2a3a"
+                  : "var(--bg-secondary)",
                 color: "var(--text-primary)",
                 borderRadius: "18px",
                 fontSize: "0.875rem",
                 wordBreak: "break-word",
                 boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
-                border: "1px solid var(--border)",
+                border: isUserMessage
+                  ? "1px solid #3a4a5a"
+                  : "1px solid var(--border)",
                 overflow: "hidden",
               }}
             >
@@ -600,8 +649,12 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                   alignItems: "center",
                   gap: "0.5rem",
                   padding: "0.75rem 1rem",
-                  borderBottom: "1px solid var(--border)",
-                  backgroundColor: "var(--bg-primary)",
+                  borderBottom: isUserMessage
+                    ? "1px solid #3a4a5a"
+                    : "1px solid var(--border)",
+                  backgroundColor: isUserMessage
+                    ? "#2a3a4a"
+                    : "var(--bg-primary)",
                 }}
               >
                 <span
@@ -616,7 +669,9 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 <span
                   style={{
                     fontSize: "0.7rem",
-                    color: "var(--text-muted)",
+                    color: isUserMessage
+                      ? "var(--text-secondary)"
+                      : "var(--text-muted)",
                     fontFamily: "monospace",
                   }}
                 >
@@ -694,9 +749,24 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   return (
     <div style={{ paddingBottom: isFinished ? "2rem" : "200px" }}>
       <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: 600, marginBottom: "1rem" }}>
-          {thread.topic}
+        <h1
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 600,
+            marginBottom: "1rem",
+          }}
+        >
+          Topic
         </h1>
+        <h2
+          style={{
+            fontSize: "1rem",
+            fontWeight: 600,
+            marginBottom: "1rem",
+          }}
+        >
+          {thread.topic}
+        </h2>
       </div>
 
       <div className="card">
