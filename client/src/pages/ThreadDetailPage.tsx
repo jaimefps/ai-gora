@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { api } from "../api"
 import type { Thread, Persona } from "../types"
+import { PersonaModal } from "../components/PersonaModal"
 
 interface ThreadDetailPageProps {
   threadId: string
@@ -19,6 +20,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   const [expandedThoughts, setExpandedThoughts] = useState<Set<number>>(
     new Set()
   )
+  const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
 
   const loadThread = useCallback(async () => {
     try {
@@ -538,6 +540,28 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     fontSize: "0.875rem",
                     color: "var(--text-primary)",
                     lineHeight: "1",
+                    cursor: message.personaId === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
+                    textDecoration: message.personaId === "AIGORA_INTERNAL_USER" ? "none" : "underline",
+                    textDecorationColor: "transparent",
+                    transition: "text-decoration-color 0.2s ease",
+                  }}
+                  onClick={() => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      const persona = personas.find((p) => p.personaId === message.personaId);
+                      if (persona) {
+                        setSelectedPersona(persona);
+                      }
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      e.currentTarget.style.textDecorationColor = "var(--text-primary)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      e.currentTarget.style.textDecorationColor = "transparent";
+                    }
                   }}
                 >
                   {getPersonaName(message.personaId)}
@@ -662,6 +686,28 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     fontWeight: "600",
                     fontSize: "0.875rem",
                     color: "var(--text-primary)",
+                    cursor: message.personaId === "AIGORA_INTERNAL_USER" ? "default" : "pointer",
+                    textDecoration: message.personaId === "AIGORA_INTERNAL_USER" ? "none" : "underline",
+                    textDecorationColor: "transparent",
+                    transition: "text-decoration-color 0.2s ease",
+                  }}
+                  onClick={() => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      const persona = personas.find((p) => p.personaId === message.personaId);
+                      if (persona) {
+                        setSelectedPersona(persona);
+                      }
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      e.currentTarget.style.textDecorationColor = "var(--text-primary)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (message.personaId !== "AIGORA_INTERNAL_USER") {
+                      e.currentTarget.style.textDecorationColor = "transparent";
+                    }
                   }}
                 >
                   {getPersonaName(message.personaId)}
@@ -1013,6 +1059,13 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {selectedPersona && (
+        <PersonaModal 
+          persona={selectedPersona}
+          onClose={() => setSelectedPersona(null)}
+        />
       )}
     </div>
   )
