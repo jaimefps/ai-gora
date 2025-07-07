@@ -12,7 +12,7 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
   const [showScrollButton, setShowScrollButton] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const lastScrollTop = useRef(0)
-  
+
   const checkScrollPosition = () => {
     if (containerRef.current) {
       const target = containerRef.current
@@ -21,7 +21,7 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
       setShowScrollButton(!isAtBottom)
     }
   }
-  
+
   const handleScroll = (e) => {
     const target = e.target
     const st = target.scrollTop
@@ -38,7 +38,7 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
     }
     lastScrollTop.current = st <= 0 ? 0 : st
   }
-  
+
   useEffect(() => {
     if (autoScroll) {
       if (containerRef.current) {
@@ -51,12 +51,12 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
     // Check scroll position after content changes
     checkScrollPosition()
   }, [length, autoScroll])
-  
+
   // Check scroll position on mount
   useEffect(() => {
     checkScrollPosition()
   }, [])
-  
+
   const scrollToBottom = () => {
     if (containerRef.current) {
       containerRef.current.scrollTo({
@@ -65,7 +65,7 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
       })
     }
   }
-  
+
   return {
     handleScroll,
     chatRef: containerRef,
@@ -199,10 +199,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   const isFinished =
     voteCount === undefined ? true : voteCount >= (thread?.personas.length ?? 0)
 
-  const { chatRef, handleScroll, showScrollButton, scrollToBottom } = useScrollBehavior(
-    thread?.stream?.length ?? 0,
-    isFinished ?? true
-  )
+  const { chatRef, handleScroll, showScrollButton, scrollToBottom } =
+    useScrollBehavior(thread?.stream?.length ?? 0, isFinished ?? true)
 
   if (loading) {
     return (
@@ -1025,7 +1023,13 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             marginBottom: "1rem",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
             <h2
               style={{
                 fontSize: "1.25rem",
@@ -1033,7 +1037,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 margin: 0,
               }}
             >
-              Chat
+              Thread
             </h2>
             <div
               style={{
@@ -1159,11 +1163,13 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "scale(1.05)"
-                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.3)"
+                  e.currentTarget.style.boxShadow =
+                    "0 6px 16px rgba(0, 0, 0, 0.3)"
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)"
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)"
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 12px rgba(0, 0, 0, 0.2)"
                 }}
               >
                 ↓
