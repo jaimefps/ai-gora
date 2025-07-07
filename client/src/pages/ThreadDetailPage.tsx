@@ -10,15 +10,12 @@ interface ThreadDetailPageProps {
 const useScrollBehavior = (length: number, finished?: boolean) => {
   const [autoScroll, setAutoScroll] = useState(!finished)
   const containerRef = useRef<HTMLDivElement>(null)
-
   const lastScrollTop = useRef(0)
-
   const handleScroll = (e) => {
     const target = e.target
     const st = target.scrollTop
     const isAtBottom =
       target.scrollHeight - target.scrollTop - target.clientHeight < 10
-
     if (st > lastScrollTop.current) {
       if (isAtBottom) {
         setAutoScroll(true)
@@ -26,13 +23,11 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
     } else if (st < lastScrollTop.current) {
       setAutoScroll(false)
     }
-
     lastScrollTop.current = st <= 0 ? 0 : st
   }
-
   useEffect(() => {
-    if (containerRef.current) {
-      if (autoScroll) {
+    if (autoScroll) {
+      if (containerRef.current) {
         containerRef.current.scrollTo({
           top: containerRef.current.scrollHeight,
           behavior: "smooth",
@@ -40,7 +35,6 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
       }
     }
   }, [length, autoScroll])
-
   return {
     handleScroll,
     chatRef: containerRef,
@@ -167,12 +161,14 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
     (event) => event.type === "VoteSchema"
   ).length
 
+  // If voteCount is undefined, then it;s likely we are still waiting to load the thread data;
+  // so we should avoid saying isFinished is false because that can trigger things unintentionally:
   const isFinished =
-    voteCount !== undefined && voteCount >= (thread?.personas.length ?? 0)
+    voteCount === undefined ? true : voteCount >= (thread?.personas.length ?? 0)
 
   const { chatRef, handleScroll } = useScrollBehavior(
     thread?.stream?.length ?? 0,
-    isFinished
+    isFinished ?? true
   )
 
   if (loading) {
@@ -963,23 +959,27 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   return (
     <div style={{ paddingBottom: isFinished ? "2rem" : "200px" }}>
       <div style={{ marginBottom: "2rem" }}>
-        <h1
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: 600,
-            marginBottom: "1rem",
-          }}
-        >
-          Topic
-        </h1>
         <h2
           style={{
             fontSize: "1rem",
-            fontWeight: 600,
+            textAlign: "justify",
             marginBottom: "1rem",
           }}
         >
-          {thread.topic}
+          <span
+            style={{
+              fontWeight: 600,
+            }}
+          >
+            Topic:
+          </span>{" "}
+          <span
+            style={{
+              fontWeight: 100,
+            }}
+          >
+            {thread.topic}
+          </span>
         </h2>
       </div>
 
