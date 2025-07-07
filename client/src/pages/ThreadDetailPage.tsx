@@ -9,8 +9,19 @@ interface ThreadDetailPageProps {
 
 const useScrollBehavior = (length: number, finished?: boolean) => {
   const [autoScroll, setAutoScroll] = useState(!finished)
+  const [showScrollButton, setShowScrollButton] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const lastScrollTop = useRef(0)
+  
+  const checkScrollPosition = () => {
+    if (containerRef.current) {
+      const target = containerRef.current
+      const isAtBottom =
+        target.scrollHeight - target.scrollTop - target.clientHeight < 10
+      setShowScrollButton(!isAtBottom)
+    }
+  }
+  
   const handleScroll = (e) => {
     const target = e.target
     const st = target.scrollTop
@@ -19,12 +30,15 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
     if (st > lastScrollTop.current) {
       if (isAtBottom) {
         setAutoScroll(true)
+        setShowScrollButton(false)
       }
     } else if (st < lastScrollTop.current) {
       setAutoScroll(false)
+      setShowScrollButton(!isAtBottom)
     }
     lastScrollTop.current = st <= 0 ? 0 : st
   }
+  
   useEffect(() => {
     if (autoScroll) {
       if (containerRef.current) {
@@ -34,10 +48,29 @@ const useScrollBehavior = (length: number, finished?: boolean) => {
         })
       }
     }
+    // Check scroll position after content changes
+    checkScrollPosition()
   }, [length, autoScroll])
+  
+  // Check scroll position on mount
+  useEffect(() => {
+    checkScrollPosition()
+  }, [])
+  
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }
+  
   return {
     handleScroll,
     chatRef: containerRef,
+    showScrollButton,
+    scrollToBottom,
   }
 }
 
@@ -166,7 +199,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   const isFinished =
     voteCount === undefined ? true : voteCount >= (thread?.personas.length ?? 0)
 
-  const { chatRef, handleScroll } = useScrollBehavior(
+  const { chatRef, handleScroll, showScrollButton, scrollToBottom } = useScrollBehavior(
     thread?.stream?.length ?? 0,
     isFinished ?? true
   )
@@ -1077,29 +1110,65 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         </div>
 
         {viewMode === "chat" ? (
-          <div
-            ref={chatRef}
-            onScroll={handleScroll}
-            style={{
-              backgroundColor: "var(--bg-tertiary)",
-              padding: "1.5rem",
-              borderRadius: "8px",
-              fontSize: "0.875rem",
-              lineHeight: 1.5,
-              overflow: "auto",
-              maxHeight: "600px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-            }}
-          >
-            {processStreamEvents().map((message, index) => {
-              return (
-                <div key={`${message.timestamp}_${index}`}>
-                  {renderChatMessage(message, index)}
-                </div>
-              )
-            })}
+          <div style={{ position: "relative" }}>
+            <div
+              ref={chatRef}
+              onScroll={handleScroll}
+              style={{
+                backgroundColor: "var(--bg-tertiary)",
+                padding: "1.5rem",
+                borderRadius: "8px",
+                fontSize: "0.875rem",
+                lineHeight: 1.5,
+                overflow: "auto",
+                maxHeight: "600px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
+              {processStreamEvents().map((message, index) => {
+                return (
+                  <div key={`${message.timestamp}_${index}`}>
+                    {renderChatMessage(message, index)}
+                  </div>
+                )
+              })}
+            </div>
+            {showScrollButton && (
+              <button
+                onClick={scrollToBottom}
+                style={{
+                  position: "absolute",
+                  bottom: "20px",
+                  right: "20px",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  backgroundColor: "var(--accent)",
+                  color: "white",
+                  border: "none",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.2rem",
+                  zIndex: 10,
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)"
+                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.3)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)"
+                }}
+              >
+                ↓
+              </button>
+            )}
           </div>
         ) : (
           <pre
