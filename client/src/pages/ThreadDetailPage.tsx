@@ -1035,7 +1035,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   }
 
   return (
-    <div style={{ paddingBottom: isFinished ? "2rem" : "200px" }}>
+    <div>
       <div className="card">
         <div
           style={{
@@ -1286,121 +1286,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
           </pre>
         )}
       </div>
-
-      {/* Controls Footer - Hidden when thread is finished */}
-      {!isFinished && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "var(--bg-secondary)",
-            borderTop: "1px solid var(--border)",
-            padding: "1rem 0",
-            zIndex: 100,
-          }}
-        >
-          <div className="container">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-              }}
-            >
-              <button
-                onClick={handlePause}
-                disabled={isOperating || !isActive || isFinished}
-                style={{
-                  backgroundColor:
-                    isActive && !isFinished
-                      ? "var(--warning)"
-                      : "var(--bg-tertiary)",
-                  color:
-                    isActive && !isFinished ? "black" : "var(--text-muted)",
-                  minWidth: "80px",
-                }}
-              >
-                {isOperating ? "..." : "⏸️ Pause"}
-              </button>
-
-              <button
-                onClick={handleResume}
-                disabled={isOperating || isActive || isFinished}
-                className="primary"
-                style={{
-                  backgroundColor:
-                    isPaused && !isFinished
-                      ? "var(--accent)"
-                      : "var(--bg-tertiary)",
-                  minWidth: "80px",
-                }}
-              >
-                {isOperating ? "..." : "▶️ Resume"}
-              </button>
-
-              <form
-                onSubmit={handleSpeak}
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  gap: "0.5rem",
-                  alignItems: "flex-end",
-                }}
-              >
-                <div
-                  style={{ display: "flex", flexDirection: "column", flex: 1 }}
-                >
-                  <input
-                    type="text"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder={
-                      isActive
-                        ? "Pause thread to add notes"
-                        : "Private notes (optional)"
-                    }
-                    disabled={isActive}
-                    style={{
-                      marginBottom: "0.5rem",
-                      fontSize: "0.75rem",
-                      padding: "0.5rem",
-                      opacity: isActive ? 0.5 : 1,
-                    }}
-                  />
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder={
-                      isActive
-                        ? "Pause thread to participate"
-                        : "Type your message..."
-                    }
-                    required
-                    disabled={isActive}
-                    style={{
-                      flex: 1,
-                      opacity: isActive ? 0.5 : 1,
-                    }}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isOperating || !message.trim() || isActive}
-                  className="primary"
-                  style={{
-                    opacity: isActive ? 0.5 : 1,
-                  }}
-                >
-                  {isOperating ? "..." : "Send"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
 
       {selectedPersona && (
         <PersonaModal
