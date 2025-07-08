@@ -989,31 +989,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
 
   return (
     <div style={{ paddingBottom: isFinished ? "2rem" : "200px" }}>
-      <div style={{ marginBottom: "2rem" }}>
-        <h2
-          style={{
-            fontSize: "1rem",
-            textAlign: "justify",
-            marginBottom: "1rem",
-          }}
-        >
-          <span
-            style={{
-              fontWeight: 600,
-            }}
-          >
-            Topic:
-          </span>{" "}
-          <span
-            style={{
-              fontWeight: 100,
-            }}
-          >
-            {thread.topic}
-          </span>
-        </h2>
-      </div>
-
       <div className="card">
         <div
           style={{
@@ -1037,7 +1012,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 margin: 0,
               }}
             >
-              Thread
+              Chat
             </h2>
             <div
               style={{
@@ -1113,6 +1088,33 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
           </div>
         </div>
 
+        <div
+          style={{
+            marginBottom: "1rem",
+            padding: "0.5rem 0",
+            borderBottom: "1px solid var(--border)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.875rem",
+              color: "var(--text-primary)",
+              lineHeight: 1.4,
+            }}
+          >
+            <span
+              style={{
+                fontWeight: 600,
+                color: "var(--text-secondary)",
+                marginRight: "0.5rem",
+              }}
+            >
+              Topic:
+            </span>
+            {thread.topic}
+          </div>
+        </div>
+
         {viewMode === "chat" ? (
           <div style={{ position: "relative" }}>
             <div
@@ -1149,9 +1151,9 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                   width: "48px",
                   height: "48px",
                   borderRadius: "50%",
-                  backgroundColor: "var(--accent)",
-                  color: "white",
-                  border: "none",
+                  backgroundColor: "var(--bg-secondary)",
+                  color: "var(--text-secondary)",
+                  border: "1px solid var(--border)",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
                   cursor: "pointer",
                   display: "flex",

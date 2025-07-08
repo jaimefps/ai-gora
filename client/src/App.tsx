@@ -45,7 +45,7 @@ function App() {
       case "thread-detail": {
         breadcrumbs.push(
           { label: "Threads", onClick: () => navigate("threads") },
-          { label: `Thread ${currentRoute.params?.threadId}` }
+          { label: `${currentRoute.params?.threadId}` }
         )
         break
       }
