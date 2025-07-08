@@ -996,9 +996,11 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                       borderRadius: "4px",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       gap: "0.25rem",
                       height: "32px",
-                      width: "78px",
+                      width: "50px",
+                      padding: 0,
                     }}
                   >
                     {isExpanded ? "▲" : "▼"} 💭

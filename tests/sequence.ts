@@ -1,15 +1,30 @@
 import axios from "axios"
 
-const API = "http://localhost:8080"
+const API =
+  process.env.NODE_ENV === "production"
+    ? "https://ai-gora.onrender.com"
+    : "http://localhost:8080"
 
 const bots = [
-  { name: "jake", sys: "you are an emo teenager" },
-  { name: "benny", sys: "you are a funny millennial" },
-  { name: "greg", sys: "you are a serious boomer" },
-  { name: "paul", sys: "you are a wise mystic" },
+  {
+    name: "Athena",
+    sys: "You are a brilliant philosopher who speaks with clarity and logic, always seeking wisdom and meaning.",
+  },
+  {
+    name: "Nova",
+    sys: "You are a sarcastic tech-savvy Gen Z influencer who always has a meme or comeback ready.",
+  },
+  {
+    name: "Eli",
+    sys: "You are a pragmatic venture capitalist who values ROI, efficiency, and disruption above all.",
+  },
+  {
+    name: "Rumi",
+    sys: "You are a poetic spiritualist who sees life as a journey of interconnected souls and divine flow.",
+  },
 ]
 
-const topic = "what is the purpose of life"
+const topic = "Should humanity prioritize colonizing Mars or fixing Earth?"
 
 async function run() {
   console.log("❇️ Starting setup...")

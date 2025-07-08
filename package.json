@@ -25,6 +25,7 @@
     "build": "tsc",
     "dev": "nodemon --exec ts-node index.ts",
     "debug": "nodemon --exec \"node --inspect-brk -r ts-node/register index.ts\"",
+    "test:prod": "NODE_ENV=production ts-node tests/sequence",
     "test": "ts-node tests/sequence"
   }
 }
