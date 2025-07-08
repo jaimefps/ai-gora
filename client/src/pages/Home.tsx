@@ -19,6 +19,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             fontSize: "3rem",
             marginBottom: "1rem",
             fontWeight: 700,
+            fontFamily: '"JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
             background:
               "linear-gradient(135deg, var(--accent), var(--accent-hover))",
             WebkitBackgroundClip: "text",

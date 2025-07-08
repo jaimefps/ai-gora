@@ -1127,7 +1127,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 fontSize: "0.875rem",
                 lineHeight: 1.5,
                 overflow: "auto",
-                height: "calc(100vh - 350px)",
+                height: "calc(100vh - 295px)",
                 display: "flex",
                 flexDirection: "column",
                 gap: "0.5rem",
