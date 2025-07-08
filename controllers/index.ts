@@ -296,8 +296,16 @@ const format = {
   },
 }
 
+console.log({
+  NODE_ENV: process.env.NODE_ENV,
+})
+
 function getSchemas(fileName: string) {
-  const schemaPath = path.join(__dirname, "../schemas", `${fileName}.ts`)
+  const schemaPath = path.join(
+    __dirname,
+    "../schemas",
+    `${fileName}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`
+  )
   return fs.readFileSync(schemaPath, "utf8")
 }
 
