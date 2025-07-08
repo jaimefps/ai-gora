@@ -1169,7 +1169,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               Topic:
             </span>
             {thread.topic}
-            <span>more</span>
           </div>
         </div>
 
@@ -1301,7 +1300,136 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       {/* Only show drawer when thread is paused */}
       {isPaused && (
         <div className="card chat-drawer">
-          <h3>Chat Controls</h3>
+          <h3 style={{ marginBottom: "1rem" }}>Chat Controls</h3>
+
+          {/* Intervention Form */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border)",
+              borderRadius: "8px",
+              padding: "1rem",
+              marginBottom: "1rem",
+              width: "100%",
+            }}
+          >
+            <h4
+              style={{
+                margin: "0 0 1rem 0",
+                fontSize: "0.875rem",
+                fontWeight: "600",
+                color: "var(--text-primary)",
+              }}
+            >
+              Contribute to discussion
+            </h4>
+            <form
+              onSubmit={handleSpeak}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
+              <div>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    marginBottom: "0.5rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  Notes (private)
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Private notes..."
+                  style={{
+                    width: "100%",
+                    minHeight: "3rem",
+                    maxHeight: "3rem",
+                    padding: "0.5rem",
+                    border: "1px solid var(--border)",
+                    borderRadius: "4px",
+                    backgroundColor: "var(--bg-tertiary)",
+                    color: "var(--text-primary)",
+                    fontSize: "0.875rem",
+                    resize: "none",
+                    fontFamily: "inherit",
+                    lineHeight: "1.4",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    marginBottom: "0.5rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  Message (public)
+                </label>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Your intervention message..."
+                  style={{
+                    width: "100%",
+                    minHeight: "10rem",
+                    maxHeight: "15rem",
+                    padding: "0.5rem",
+                    border: "1px solid var(--border)",
+                    borderRadius: "4px",
+                    backgroundColor: "var(--bg-tertiary)",
+                    color: "var(--text-primary)",
+                    fontSize: "0.875rem",
+                    resize: "vertical",
+                    fontFamily: "inherit",
+                    lineHeight: "1.4",
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isOperating || !message.trim()}
+                style={{
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-primary)",
+                  border: "1px solid var(--border)",
+                  padding: "0.75rem",
+                  borderRadius: "4px",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  cursor:
+                    isOperating || !message.trim() ? "not-allowed" : "pointer",
+                  opacity: isOperating || !message.trim() ? 0.5 : 1,
+                  transition: "background-color 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isOperating && message.trim()) {
+                    e.currentTarget.style.backgroundColor =
+                      "var(--bg-secondary)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isOperating && message.trim()) {
+                    e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"
+                  }
+                }}
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+
           <button
             onClick={handleResume}
             disabled={isOperating}
