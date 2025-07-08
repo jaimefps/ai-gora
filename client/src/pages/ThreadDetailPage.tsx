@@ -1005,7 +1005,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               gap: "1rem",
             }}
           >
-            <h2
+            {/* <h2
               style={{
                 fontSize: "1.25rem",
                 fontWeight: 600,
@@ -1013,7 +1013,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               }}
             >
               Chat
-            </h2>
+            </h2> */}
             <div
               style={{
                 display: "flex",
@@ -1127,7 +1127,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 fontSize: "0.875rem",
                 lineHeight: 1.5,
                 overflow: "auto",
-                maxHeight: "600px",
+                height: "calc(100vh - 350px)",
                 display: "flex",
                 flexDirection: "column",
                 gap: "0.5rem",
@@ -1187,7 +1187,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               fontSize: "0.875rem",
               lineHeight: 1.5,
               overflow: "auto",
-              maxHeight: "600px",
+              height: "calc(100vh - 350px)",
               whiteSpace: "pre-wrap",
               wordBreak: "break-word",
             }}
