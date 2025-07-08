@@ -298,7 +298,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
           timestamp: event.timestamp,
         }
         chatMessages.push(messageItem)
-        
+
         // Track multiple voting LoadMarkers for the same bot
         if (!votingBots.has(event.botId)) {
           votingBots.set(event.botId, [])
@@ -306,14 +306,17 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         votingBots.get(event.botId)!.push(chatMessages.length - 1)
       }
       // LoadMarker + ThesisSchema (bot thinking)
-      else if (event.type === "LoadMarker" && event.loading === "ThesisSchema") {
+      else if (
+        event.type === "LoadMarker" &&
+        event.loading === "ThesisSchema"
+      ) {
         const messageItem = {
           type: "thinking",
           personaId: event.botId,
           timestamp: event.timestamp,
         }
         chatMessages.push(messageItem)
-        
+
         // Track multiple thinking LoadMarkers for the same bot
         if (!thinkingBots.has(event.botId)) {
           thinkingBots.set(event.botId, [])
@@ -354,7 +357,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             secretThoughts: event.payload?.secret_thoughts || "",
             timestamp: event.timestamp,
           }
-          
+
           // Remove all other voting LoadMarkers for this bot by marking them as null
           for (let i = 0; i < votingIndices.length - 1; i++) {
             chatMessages[votingIndices[i]] = null
@@ -379,14 +382,14 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
           const thinkingIndices = thinkingBots.get(event.sourceId)
           if (thinkingIndices && thinkingIndices.length > 0) {
             // Mark all thinking messages as null
-            thinkingIndices.forEach(index => {
+            thinkingIndices.forEach((index) => {
               if (chatMessages[index]) {
                 chatMessages[index] = null
               }
             })
           }
           thinkingBots.delete(event.sourceId)
-          
+
           // Add the actual thesis message
           chatMessages.push({
             type: "thesis",
@@ -400,7 +403,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
     })
 
     // Filter out null entries (removed thinking/voting messages)
-    return chatMessages.filter(msg => msg !== null)
+    return chatMessages.filter((msg) => msg !== null)
   }
 
   // Helper function to render individual chat messages
@@ -978,14 +981,15 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                       cursor: "pointer",
                       fontSize: "0.8rem",
                       color: "var(--text-muted)",
-                      padding: "0.25rem",
                       borderRadius: "4px",
                       display: "flex",
                       alignItems: "center",
                       gap: "0.25rem",
+                      height: "32px",
+                      width: "78px",
                     }}
                   >
-                    🧠 {isExpanded ? "▲" : "▼"}
+                    {isExpanded ? "▲" : "▼"} 💭
                   </button>
                 )}
               </div>

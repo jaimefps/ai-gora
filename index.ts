@@ -79,42 +79,6 @@ app.post("/threads", (req, res) => {
 })
 
 /**
- * Maybe only allow updates to
- * via the `/intervene` endpoint.
- *
- */
-// app.put("/threads/:threadId", (req, res) => {
-//   try {
-//     const { threadId } = req.params
-//     const { topic, personas, config } = req.body
-//     const t = store.threads[threadId]
-//     if (!t) {
-//       res.sendStatus(400)
-//       return
-//     }
-//     const next = {
-//       ...t,
-//       topic: topic ?? t.topic,
-//       // risky to allow persona updates here;
-//       // only `/intervene` should do this.
-//       personas: personas ?? t.personas,
-//       config: {
-//         ...t.config,
-//         delay: config?.delay ?? t.config.delay,
-//       },
-//     }
-//     store.threads[threadId] = next
-//     res.json({
-//       threadId,
-//       ...next,
-//     })
-//   } catch (err) {
-//     console.error(err)
-//     res.sendStatus(500)
-//   }
-// })
-
-/**
  * Eventually enable,
  * not necessary for demo.
  *
@@ -189,30 +153,30 @@ app.post("/personas", (req, res) => {
  * not necessary for demo.
  *
  */
-// app.put("/personas/:personaId", (req, res) => {
-//   try {
-//     const { personaId } = req.params
-//     const { name, sys } = req.body
-//     const p = store.personas[personaId]
-//     if (!p) {
-//       res.sendStatus(400)
-//       return
-//     }
-//     const next = {
-//       ...p,
-//       name: name ?? p.name,
-//       sys: sys ?? p.sys,
-//     }
-//     store.personas[personaId] = next
-//     res.json({
-//       personaId: personaId,
-//       ...next,
-//     })
-//   } catch (err) {
-//     console.error(err)
-//     res.sendStatus(500)
-//   }
-// })
+app.put("/personas/:personaId", (req, res) => {
+  try {
+    const { personaId } = req.params
+    const { name, sys } = req.body
+    const p = store.personas[personaId]
+    if (!p) {
+      res.sendStatus(400)
+      return
+    }
+    const next = {
+      ...p,
+      name: name ?? p.name,
+      sys: sys ?? p.sys,
+    }
+    store.personas[personaId] = next
+    res.json({
+      personaId: personaId,
+      ...next,
+    })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
+})
 
 /**
  * Eventually enable,
