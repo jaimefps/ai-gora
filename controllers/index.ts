@@ -118,6 +118,12 @@ type MarkerEvent =
       timestamp: number
       message: string
     }
+  | {
+      type: "AllowMarker"
+      timestamp: number
+      target: StreamEvent
+      allow: boolean
+    }
 
 export type StreamEvent = SchemaEvent | MarkerEvent
 

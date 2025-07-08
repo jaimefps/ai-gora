@@ -9,18 +9,19 @@ Let lose some bots to argue over whatever topic.
 - create personas to use within threads
 - create threads with personas attached
 - users can interject in discussion
+- ui for overall ease-of-use
 - pause & resume thread
 
 ### soon
 
-- rank voting
-- ui for overall ease-of-use
+- introduce AllowMarkers for locking operations
 - users can manage the turn stack
 - users can chat 1:1 with personas
 - users can invite/dismiss personas
 - personas support different ai providers
 - allow users to leverage their own api-keys
 - retry bot calls if schema validations fail
+- rank voting
 
 ### maybe
 
