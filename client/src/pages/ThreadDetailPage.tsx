@@ -1039,7 +1039,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   }
 
   return (
-    <div>
+    <div className="chat-container">
       <div className="card">
         <div
           style={{
@@ -1079,7 +1079,6 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               <span>{thread.personas.length} personas</span>
               <span>•</span>
               <span>{thread.stream.length} events</span>
-              <span>•</span>
               <div
                 style={{
                   display: "flex",
@@ -1289,6 +1288,11 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
             {JSON.stringify(thread.stream, null, 2)}
           </pre>
         )}
+      </div>
+
+      {/* conditionally render this based on whether the app is paused */}
+      <div className="card chat-drawer">
+        <h3>Intervene</h3>
       </div>
 
       {selectedPersona && (

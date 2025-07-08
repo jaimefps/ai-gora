@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({
           )}
         </div>
       </nav>
-      <main className="container chat-container">
+      <main className="container">
         {title && (
           <h1
             style={{
