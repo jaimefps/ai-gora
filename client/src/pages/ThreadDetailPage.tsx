@@ -261,6 +261,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   const processStreamEvents = () => {
     const chatMessages: any[] = []
     const wakingBots = new Map<string, number>() // botId -> index of LoadMarker
+    const votingBots = new Map<string, number[]>() // botId -> array of indices for voting LoadMarkers
+    const thinkingBots = new Map<string, number[]>() // botId -> array of indices for thinking LoadMarkers
 
     thread.stream.forEach((event, index) => {
       // LoadMarker + AckSchema (bot waking up)
@@ -287,6 +289,37 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         chatMessages.push(messageItem)
         wakingBots.set("AIGORA_INTERNAL_MODERATOR", chatMessages.length - 1)
       }
+      // LoadMarker + VoteSchema (bot voting)
+      else if (event.type === "LoadMarker" && event.loading === "VoteSchema") {
+        const messageItem = {
+          type: "voting",
+          personaId: event.botId,
+          status: "voting", // "voting" or "voted"
+          timestamp: event.timestamp,
+        }
+        chatMessages.push(messageItem)
+        
+        // Track multiple voting LoadMarkers for the same bot
+        if (!votingBots.has(event.botId)) {
+          votingBots.set(event.botId, [])
+        }
+        votingBots.get(event.botId)!.push(chatMessages.length - 1)
+      }
+      // LoadMarker + ThesisSchema (bot thinking)
+      else if (event.type === "LoadMarker" && event.loading === "ThesisSchema") {
+        const messageItem = {
+          type: "thinking",
+          personaId: event.botId,
+          timestamp: event.timestamp,
+        }
+        chatMessages.push(messageItem)
+        
+        // Track multiple thinking LoadMarkers for the same bot
+        if (!thinkingBots.has(event.botId)) {
+          thinkingBots.set(event.botId, [])
+        }
+        thinkingBots.get(event.botId)!.push(chatMessages.length - 1)
+      }
       // AckSchema (bot is now awake)
       else if (event.type === "AckSchema") {
         const wakingIndex = wakingBots.get(event.sourceId)
@@ -308,20 +341,53 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         }
         wakingBots.delete("AIGORA_INTERNAL_MODERATOR")
       }
-      // VoteSchema (bot vote)
+      // VoteSchema (bot vote complete)
       else if (event.type === "VoteSchema") {
-        chatMessages.push({
-          type: "vote",
-          personaId: event.sourceId,
-          voteId: event.payload?.vote_id,
-          secretThoughts: event.payload?.secret_thoughts || "",
-          timestamp: event.timestamp,
-        })
+        const votingIndices = votingBots.get(event.sourceId)
+        if (votingIndices && votingIndices.length > 0) {
+          // Replace the most recent voting message with the actual vote
+          const mostRecentIndex = votingIndices[votingIndices.length - 1]
+          chatMessages[mostRecentIndex] = {
+            type: "vote",
+            personaId: event.sourceId,
+            voteId: event.payload?.vote_id,
+            secretThoughts: event.payload?.secret_thoughts || "",
+            timestamp: event.timestamp,
+          }
+          
+          // Remove all other voting LoadMarkers for this bot by marking them as null
+          for (let i = 0; i < votingIndices.length - 1; i++) {
+            chatMessages[votingIndices[i]] = null
+          }
+        } else {
+          // Fallback: add vote message if no voting LoadMarker was found
+          chatMessages.push({
+            type: "vote",
+            personaId: event.sourceId,
+            voteId: event.payload?.vote_id,
+            secretThoughts: event.payload?.secret_thoughts || "",
+            timestamp: event.timestamp,
+          })
+        }
+        votingBots.delete(event.sourceId)
       }
       // ThesisSchema (bot response)
       else if (event.type === "ThesisSchema") {
         const messageText = event.payload?.public_response
         if (messageText) {
+          // Remove all thinking LoadMarkers for this bot
+          const thinkingIndices = thinkingBots.get(event.sourceId)
+          if (thinkingIndices && thinkingIndices.length > 0) {
+            // Mark all thinking messages as null
+            thinkingIndices.forEach(index => {
+              if (chatMessages[index]) {
+                chatMessages[index] = null
+              }
+            })
+          }
+          thinkingBots.delete(event.sourceId)
+          
+          // Add the actual thesis message
           chatMessages.push({
             type: "thesis",
             personaId: event.sourceId,
@@ -333,27 +399,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       }
     })
 
-    // Check if the last event is a LoadMarker with loading:ThesisSchema or VoteSchema
-    if (thread.stream.length > 0) {
-      const lastEvent = thread.stream[thread.stream.length - 1]
-      if (lastEvent.type === "LoadMarker") {
-        if (lastEvent.loading === "ThesisSchema") {
-          chatMessages.push({
-            type: "thinking",
-            personaId: lastEvent.botId,
-            timestamp: lastEvent.timestamp,
-          })
-        } else if (lastEvent.loading === "VoteSchema") {
-          chatMessages.push({
-            type: "voting",
-            personaId: lastEvent.botId,
-            timestamp: lastEvent.timestamp,
-          })
-        }
-      }
-    }
-
-    return chatMessages
+    // Filter out null entries (removed thinking/voting messages)
+    return chatMessages.filter(msg => msg !== null)
   }
 
   // Helper function to render individual chat messages
