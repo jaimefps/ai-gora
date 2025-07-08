@@ -424,6 +424,8 @@ function halt(threadId: string) {
   // don't halt empty stream or swarm calls; those should
   // finish before breaks; difficult to restore if stopped.
   const emptyStream = !last
+  // todo: this is likely buggy if a response comes back from a swarm call
+  // comes in between this halt check, but not all swarm calls are done:
   const isSwarming = last?.type === "LoadMarker" && swarm.has(last.loading)
   if (emptyStream || isSwarming) return false
 

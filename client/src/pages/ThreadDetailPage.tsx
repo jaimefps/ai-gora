@@ -422,18 +422,24 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         >
           <div
             style={{
-              backgroundColor: "transparent",
-              color: "var(--text-muted)",
+              backgroundColor: "var(--bg-secondary)",
+              color: "var(--text-primary)",
               padding: "0.5rem 1rem",
               borderRadius: "16px",
               fontSize: "0.75rem",
               fontStyle: "italic",
               maxWidth: "70%",
               textAlign: "center",
-              opacity: 0.7,
+              border: "1px solid var(--border)",
+              opacity: 0.9,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
             }}
           >
-            {getPersonaName(message.personaId)} is writing...
+            <span style={{ fontSize: "0.6rem" }}>💭</span>
+            {getPersonaName(message.personaId)} is thinking...
           </div>
         </div>
       )
@@ -451,17 +457,23 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         >
           <div
             style={{
-              backgroundColor: "transparent",
-              color: "var(--text-muted)",
+              backgroundColor: "var(--bg-secondary)",
+              color: "var(--text-primary)",
               padding: "0.5rem 1rem",
               borderRadius: "16px",
               fontSize: "0.75rem",
               fontStyle: "italic",
               maxWidth: "70%",
               textAlign: "center",
-              opacity: 0.7,
+              border: "1px solid var(--border)",
+              opacity: 0.9,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
             }}
           >
+            <span style={{ fontSize: "0.7rem" }}>🗳️</span>
             {getPersonaName(message.personaId)} is voting...
           </div>
         </div>
@@ -470,8 +482,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       // Wakeup/Awake message bubble (left-aligned)
       const messageText =
         message.status === "waking"
-          ? `${getPersonaName(message.personaId)} is waking up...`
-          : `${getPersonaName(message.personaId)} is ready!`
+          ? `⏰ ${getPersonaName(message.personaId)} is waking up`
+          : `⚡ ${getPersonaName(message.personaId)} is ready`
 
       return (
         <div
@@ -489,7 +501,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               color: "var(--text-secondary)",
               padding: "0.5rem 1rem",
               borderRadius: "16px",
-              fontSize: "0.75rem",
+              fontSize: "0.8rem",
               fontStyle: "italic",
               border: "1px solid var(--border)",
               maxWidth: "70%",
