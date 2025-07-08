@@ -855,7 +855,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     color: "var(--text-muted)",
                   }}
                 >
-                  Private thoughts:
+                  Reasoning:
                 </div>
                 {message.secretThoughts}
               </div>
@@ -1014,7 +1014,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                       color: "var(--text-muted)",
                     }}
                   >
-                    Private thoughts:
+                    Reasoning:
                   </div>
                   {message.privateThoughts}
                 </div>

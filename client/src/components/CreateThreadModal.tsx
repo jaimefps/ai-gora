@@ -167,8 +167,11 @@ export const CreateThreadModal: React.FC<CreateThreadModalProps> = ({ onClose, o
                       padding: '0.5rem',
                       borderRadius: '6px',
                       backgroundColor: selectedPersonas.includes(persona.personaId) 
-                        ? 'var(--accent)' 
-                        : 'transparent'
+                        ? 'var(--bg-secondary)' 
+                        : 'transparent',
+                      border: selectedPersonas.includes(persona.personaId) 
+                        ? '1px solid var(--border)' 
+                        : '1px solid transparent'
                     }}
                   >
                     <input
@@ -179,9 +182,7 @@ export const CreateThreadModal: React.FC<CreateThreadModalProps> = ({ onClose, o
                     />
                     <span style={{ 
                       fontSize: '0.875rem',
-                      color: selectedPersonas.includes(persona.personaId) 
-                        ? 'white' 
-                        : 'var(--text-primary)'
+                      color: 'var(--text-primary)'
                     }}>
                       {persona.name}
                     </span>

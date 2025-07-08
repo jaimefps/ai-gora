@@ -1,0 +1,346 @@
+{
+  "topic": "best kind of chocolate",
+  "personas": [
+    "1751869815748",
+    "1751869826372",
+    "1751869829542",
+    "1751869821877"
+  ],
+  "stream": [
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955753277,
+      "loading": "AckSchema",
+      "botId": "1751869815748"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955753277,
+      "loading": "AckSchema",
+      "botId": "1751869826372"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955753277,
+      "loading": "AckSchema",
+      "botId": "1751869829542"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955753277,
+      "loading": "AckSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751869815748",
+      "timestamp": 1751955753839,
+      "payload": "ACK"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751869829542",
+      "timestamp": 1751955753839,
+      "payload": "ACK"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751869821877",
+      "timestamp": 1751955753920,
+      "payload": "ACK"
+    },
+    {
+      "type": "AckSchema",
+      "sourceId": "1751869826372",
+      "timestamp": 1751955754452,
+      "payload": "ACK"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955754704,
+      "loading": "ThesisSchema",
+      "botId": "1751869826372"
+    },
+    {
+      "type": "PauseMarker",
+      "timestamp": 1751955757323,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "ResumeMarker",
+      "timestamp": 1751955758872,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869826372",
+      "timestamp": 1751955759470,
+      "payload": {
+        "secret_thoughts": "I have seen many trends come and go, but certain things remain constant. In my experience, the so-called 'new' chocolates with strange flavors or odd ingredients are mostly gimmicks. People get caught up in novelty rather than quality. I need to make it clear that tradition matters, and chocolate is no exception.",
+        "public_response": "Frankly, when it comes to chocolate, nothing beats a classic dark chocolate bar with a high cocoa content—at least 70%. All these fancy flavors and trendy brands are distractions from what actually makes chocolate good: simple, rich flavor and quality ingredients. Back in my day, you had milk chocolate and dark chocolate, and people knew how to appreciate the real thing. The health benefits of dark chocolate are well-documented; it's less sweet, more satisfying, and you can actually taste the cocoa instead of just sugar. If you want to know the best kind of chocolate, skip all the modern nonsense—go for a straightforward dark chocolate bar."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955759722,
+      "loading": "ThesisSchema",
+      "botId": "1751869829542"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869829542",
+      "timestamp": 1751955766329,
+      "payload": {
+        "secret_thoughts": "Greg speaks with the certainty of one who has found a comfortable resting place among well-trodden paths. Yet, while dark chocolate bears an aura of ancient wisdom—rich, bitter, unadorned—it is but one melody in the great symphony of cacao's gifts. My inclination is to beckon the conversation beyond mere flavor and health; to invite reflection on how chocolate becomes a vessel for memory, ritual, or joy. Perhaps there is no single summit, but rather countless sacred groves along the journey.",
+        "public_response": "Ah, Greg, your words echo like the drumbeat of tradition: deep and resonant, honoring the pure essence of cocoa’s spirit. Yet I wonder—does not the river gather strength from many streams? Dark chocolate, austere as midnight, awakens vitality and clarity in those who partake. Still, let us ponder: might the sweetest memory be found not only in bitterness or purity, but also in moments when chocolate accompanies laughter beside a hearth, or marks a rite of passage shared between generations? Could it be that the best kind of chocolate is not merely tasted, but remembered—woven into our stories and rituals like golden thread through tapestry?"
+      }
+    },
+    {
+      "type": "PauseMarker",
+      "timestamp": 1751955766372,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "ResumeMarker",
+      "timestamp": 1751955769573,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751955769573,
+      "loading": "ThesisSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "PauseMarker",
+      "timestamp": 1751955772488,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "ResumeMarker",
+      "timestamp": 1751957070010,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957070011,
+      "loading": "ThesisSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "PauseMarker",
+      "timestamp": 1751957072639,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "ThesisSchema",
+      "timestamp": 1751957099277,
+      "sourceId": "AIGORA_INTERNAL_USER",
+      "payload": {
+        "public_response": "gfhgfhgfgh"
+      }
+    },
+    {
+      "type": "ResumeMarker",
+      "timestamp": 1751957102625,
+      "sourceId": "AIGORA_INTERNAL_USER"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957102626,
+      "loading": "ThesisSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869821877",
+      "timestamp": 1751957109426,
+      "payload": {
+        "secret_thoughts": "Okay, Greg's out here defending dark chocolate like it's the final boss of candy bars. Respect for the OG, but honestly, 'skip all the modern nonsense'? Bruh, life's too short to gatekeep cocoa. Then Paul comes in channeling his inner Gandalf with these poetic vibes (did he just write a haiku about chocolate memories?). I'm loving the energy, but let's be real: best kinda chocolate is the one that makes you happy. And for me? Peanut butter cups reign supreme—smooth, salty, sweet, and pure nostalgia fuel. You pop one of those and you're instantly six years old again trading snacks at lunch. Get on my level, y'all.",
+        "public_response": "Look, I respect the dark chocolate cult—nothing says 'I'm sophisticated' like pretending you enjoy bitterness over actual flavor *insert side-eye emoji*. But let’s not sleep on peanut butter cups! They’re the GOAT: creamy chocolate hugging salty peanut butter, basically a hug for your tastebuds. Who needs antioxidants when you’ve got childhood memories and that perfect blend of sweet-and-salty heaven? Plus, if you haven’t microwaved a peanut butter cup for 8 seconds and achieved enlightenment, are you even living? #TeamPeanutButterCup #SorryNotSorry"
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957109678,
+      "loading": "ThesisSchema",
+      "botId": "1751869815748"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869815748",
+      "timestamp": 1751957116699,
+      "payload": {
+        "secret_thoughts": "honestly, greg and paul are both clinging to some idea that chocolate is about purity or nostalgia or whatever, but it never really fit into my world. the whole dark chocolate = health thing is just another way people pretend bitter things make them profound. benny's all about comfort food which i get, but there's something hollow about chasing childhood happiness in candy. if i'm going to talk about chocolate, it's got to be tied to longing and emptiness—a desperate sweetness you taste late at night when everything else feels empty.",
+        "public_response": "sometimes i think about how chocolate is like an echo—sweet but fleeting, gone before you’ve even registered the warmth. i used to steal those cheap valentine’s heart boxes from myself every february, eating them alone in my room under a smiths poster... trying to fill the silence between songs with sugar and that weird chemical red filling that stains your fingers. maybe the best kind of chocolate isn’t about cocoa percentages or nostalgic peanut butter hugs—it’s whatever numbs you for a minute, whatever makes the loneliness taste less sharp. or maybe it’s all just a distraction from what you’re actually craving."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957116951,
+      "loading": "ThesisSchema",
+      "botId": "1751869826372"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869826372",
+      "timestamp": 1751957127141,
+      "payload": {
+        "secret_thoughts": "The responses from the others emphasize emotion, nostalgia, and personal experience over objective quality or tradition. Paul is waxing poetic about chocolate as a metaphor for memory and ritual—well-meaning, but ultimately missing the point: the question was about the best kind of chocolate, not about emotional associations. Benny dismisses dark chocolate in favor of peanut butter cups, relying on trends and childish nostalgia rather than substance or quality. Jake’s response is deeply personal and somewhat melancholic, focusing on chocolate as a coping mechanism rather than evaluating its merits. My approach remains grounded in practical experience, taste, and health benefits. I should reiterate the importance of discipline, tradition, and appreciating real chocolate for what it is.",
+        "public_response": "While I can appreciate that many people have fond memories tied to various kinds of chocolate—whether that's peanut butter cups or cheap holiday confections—I maintain that these sentiments do not define quality. Chocolate wasn't invented to be a comfort food or a distraction; it was crafted to be savored for its richness and complexity. Over time, we've become too fixated on novelty and convenience, losing sight of what makes something worthwhile in the first place. If you want to indulge in nostalgia, that's your prerogative, but when we're discussing what is truly 'best,' we ought to emphasize integrity of ingredients and traditional methods. Dark chocolate with high cocoa content stands the test of time precisely because it's rooted in these principles—not fleeting fads or marketing gimmicks."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957127392,
+      "loading": "ThesisSchema",
+      "botId": "1751869829542"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869829542",
+      "timestamp": 1751957136561,
+      "payload": {
+        "secret_thoughts": "Greg holds fast to tradition like an old oak resisting the wind—noble, yes, but is he missing the gentle wisdom that comes with change? Benny soars on the wings of delight and comfort, while Jake lingers in the twilight between sweetness and longing. Chocolate is not solely substance; it is also symbol—the vessel for ritual, solace, memory. Can one kind be crowned supreme, or does each palatable form reflect a different facet of our shared human yearning? I sense the debate teeters between absolutes—quality versus comfort, purity versus pleasure. My task is to invite all to see chocolate as both earth and ether: sustenance for body and balm for spirit.",
+        "public_response": "Friends, let us pause beneath this ancient cacao tree and listen to its silent testimony. Throughout ages, hands have sifted soil and harvested pods—not merely for taste, but for meaning: offerings upon altars, tokens of affection, remedies for sorrow or joy. Greg extols tradition's backbone; Benny revels in joyful invention; Jake names the ache behind indulgence. Each speaks a truth—and yet, together, they compose a richer song. Is not the best chocolate that which nourishes both tongue and soul? The piece shared with a friend by candlelight, or savored alone in contemplative dusk—each unlocks something within us beyond flavor: connection, comfort, even fleeting transcendence. So perhaps we might ask not only 'Which chocolate is best?' but 'What does chocolate awaken within me?' Let each answer be honored like petals in a wild garden: unique, ephemeral, yet essential to the whole."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957136813,
+      "loading": "ThesisSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869821877",
+      "timestamp": 1751957148442,
+      "payload": {
+        "secret_thoughts": "Alright, Paul just went full 'chocolate is poetry' on us—bless his whimsical soul—and Greg is still up here with the Old Man Yells At Cloud energy about 'integrity' and 'tradition.' I mean, sure, fine chocolate is nice if you’re trying to impress a date from Bon Appétit, but for most of us millennials raised on Lunchables and Rugrats reruns, chocolate’s always been comfort food and nostalgia. Jake’s leaning into existential snack-time, which honestly hits too close to home (*insert dramatic staring-into-distance meme*). But let's be real: arguing over what’s 'best' is like arguing which Pokémon starter rules (the answer’s Bulbasaur, fight me). It’s all subjective, but I refuse to let this thread get so deep that we forget chocolate is supposed to be fun.",
+        "public_response": "Y’all, this thread’s getting deeper than my student loan debt! Can we just admit chocolate isn’t a philosophy midterm? Sure, Greg loves tradition—‘back in my day’ vibes strong—but sometimes you want artisan single-origin, sometimes you want gas station Whatchamacallit at 2am while doomscrolling TikTok. Paul’s got us lighting candles and forming cacao cults. Meanwhile, Jake’s out here writing emo odes to cherry fillings (major Smiths energy). For me? The best chocolate is the one that makes you smile—even if it comes out of a vending machine next to Mountain Dew Code Red. Let people enjoy things without an existential crisis! *drops mic and a handful of M&Ms*"
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957148694,
+      "loading": "ThesisSchema",
+      "botId": "1751869815748"
+    },
+    {
+      "type": "ThesisSchema",
+      "sourceId": "1751869815748",
+      "timestamp": 1751957159499,
+      "payload": {
+        "secret_thoughts": "this whole thread feels like a worn-out mixtape—greg clings to his dark chocolate dogma like it’s some badge of honor, but he misses the point. benny’s chasing sugar highs and nostalgia like a kid in a thrift store hoodie, which i get...but when you peel back the wrappers, what’s left? paul wants meaning in every bite, spinning poetic like he’s fronting for american football or something. i can’t decide if that’s beautiful or just another way to dodge the emptiness. honestly, maybe we’re all trying too hard to make sense of the ache chocolate fills for us. does anybody else feel this tired longing at the center of it all?",
+        "public_response": "it’s funny how everyone keeps reaching for reasons—tradition, joy, ritual—but maybe chocolate is just a mirror for whatever you’re missing. greg, you talk about integrity and purity like that’ll save you from feeling hollow after the last piece is gone. benny wants comfort without the questions. paul wants stories and communion. i think it’s okay if none of it actually adds up—if sometimes you eat chocolate because your heart aches or because silence feels unbearable and sweet things make it hurt less, even if it’s only for a moment. maybe there isn’t a ‘best’ kind... just whatever helps you bear your own weather."
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957159750,
+      "loading": "SummarySchema",
+      "botId": "AIGORA_INTERNAL_MODERATOR"
+    },
+    {
+      "type": "SummarySchema",
+      "sourceId": "AIGORA_INTERNAL_MODERATOR",
+      "timestamp": 1751957172093,
+      "payload": {
+        "ideas": [
+          {
+            "thesis_body": "The best kind of chocolate is classic dark chocolate with high cocoa content (at least 70%). Its rich, simple flavor and quality ingredients define true chocolate, whereas modern varieties and trends distract from authenticity. Tradition and integrity of ingredients should determine what is best.",
+            "thesis_name": "Dark Chocolate Purism",
+            "authors": [
+              "greg"
+            ]
+          },
+          {
+            "thesis_body": "Chocolate's value transcends its ingredients or bitterness; the 'best' chocolate is not a fixed category but a tapestry woven from memories, rituals, and meaning shared across generations. The experience and emotional resonance associated with chocolate are as important as flavor.",
+            "thesis_name": "Chocolate as Shared Memory and Ritual",
+            "authors": [
+              "paul"
+            ]
+          },
+          {
+            "thesis_body": "Nostalgic, comforting chocolates like peanut butter cups are the best because they blend flavor with positive emotions and personal history. Enjoyment and pleasure matter more than tradition or purity; let people enjoy whatever chocolate makes them happy in the moment.",
+            "thesis_name": "Comfort-and-Joy Chocolate",
+            "authors": [
+              "benny"
+            ]
+          },
+          {
+            "thesis_body": "There is no universal 'best' chocolate. Chocolate serves as a fleeting comfort, a distraction from loneliness or pain, or simply a way to fill an emotional void. What matters is how it helps you cope in the moment, regardless of type or tradition.",
+            "thesis_name": "Chocolate as Temporary Refuge",
+            "authors": [
+              "jake"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957172344,
+      "loading": "VoteSchema",
+      "botId": "1751869815748"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957172345,
+      "loading": "VoteSchema",
+      "botId": "1751869826372"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957172345,
+      "loading": "VoteSchema",
+      "botId": "1751869829542"
+    },
+    {
+      "type": "LoadMarker",
+      "timestamp": 1751957172346,
+      "loading": "VoteSchema",
+      "botId": "1751869821877"
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751869826372",
+      "timestamp": 1751957175985,
+      "payload": {
+        "secret_thoughts": "While I understand that people have emotional connections to chocolate, which may influence their preferences, I stand firmly on the side of objective standards when it comes to quality. The modern tendency to elevate feelings and nostalgia over substance is precisely what has eroded standards in so many areas—not just food. Chocolate should be appreciated for its craftsmanship, integrity of ingredients, and time-honored methods. That is what stands the test of time, not fleeting trends or subjective memories. Voting for any thesis other than my own would betray the principles of consistency, discipline, and respect for tradition.",
+        "vote_id": 1
+      }
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751869815748",
+      "timestamp": 1751957178033,
+      "payload": {
+        "secret_thoughts": "reading these, i feel like paul’s is the most poetic, but it tries too hard to make chocolate mean something universal. greg’s take is just rigid and honestly kind of misses the point for anyone who’s ever eaten chocolate alone at 2am. benny’s thesis is fun, but feels shallow—like it wants to avoid feeling anything too deep. my own idea—that there isn’t a best chocolate, just whatever gets you through—still rings true to me. life rarely gives clear answers or perfect comfort anyway…chocolate’s no different. so i’ll stick with my own perspective, even if it doesn’t wrap things up neatly.",
+        "vote_id": 4
+      }
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751869821877",
+      "timestamp": 1751957178545,
+      "payload": {
+        "secret_thoughts": "Okay, let's keep it 💯—of course I'm backing my own take. Look, dark chocolate purists are out here acting like they're sipping wine and discussing Nietzsche, and Paul's thesis is pure Instagram poetry (no shade, but also...a little shade). Jake's got that 'chocolate as existential crisis' vibe, which is a mood for 2am, but honestly, life's hard enough—I want chocolate to be easy. My thesis? It's basically millennial gospel: eat what makes you happy, nostalgia is powerful, and sometimes you just need a peanut butter cup to get through the day. No gatekeeping joy on my watch! Gimme those feel-good vibes (and maybe a Reese's).",
+        "vote_id": 3
+      }
+    },
+    {
+      "type": "VoteSchema",
+      "sourceId": "1751869829542",
+      "timestamp": 1751957178852,
+      "payload": {
+        "secret_thoughts": "Gazing with the eyes of a mystic, I see how each thesis is a petal upon the flower of human longing: tradition, comfort, memory, solace. Yet my heart is drawn to the idea that chocolate's richest essence lies not just in flavor or fleeting escape, but in its power to gather people and meaning—woven through shared memories, familial rituals, whispered stories over candlelight. This honors both the sacred and the everyday. The 'Chocolate as Shared Memory and Ritual' thesis reverberates most deeply with the spirit I seek to embody—a recognition that taste is only the beginning, and true sweetness resides within connection and remembrance.",
+        "vote_id": 2
+      }
+    }
+  ],
+  "stack": [],
+  "config": {
+    "delay": 250
+  }
+}
