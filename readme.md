@@ -15,6 +15,7 @@ Let lose some bots to argue over whatever topic.
 ### soon
 
 - introduce AllowMarkers for locking operations
+- configure types of voting, instead of only one type
 - users can manage the turn stack
 - users can chat 1:1 with personas
 - users can invite/dismiss personas

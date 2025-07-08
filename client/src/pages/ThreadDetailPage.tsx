@@ -1188,6 +1188,49 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                 )
               })}
             </div>
+            {/* Floating pause button */}
+            {isActive && (
+              <button
+                onClick={handlePause}
+                disabled={isOperating}
+                style={{
+                  position: "absolute",
+                  bottom: showScrollButton ? "80px" : "20px",
+                  right: "20px",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  backgroundColor: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: "1px solid var(--border)",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                  cursor: isOperating ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.2rem",
+                  zIndex: 10,
+                  transition: "all 0.2s ease",
+                  opacity: isOperating ? 0.5 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!isOperating) {
+                    e.currentTarget.style.transform = "scale(1.05)"
+                    e.currentTarget.style.boxShadow =
+                      "0 6px 16px rgba(0, 0, 0, 0.3)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isOperating) {
+                    e.currentTarget.style.transform = "scale(1)"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 12px rgba(0, 0, 0, 0.2)"
+                  }
+                }}
+              >
+                ⏸️
+              </button>
+            )}
             {showScrollButton && (
               <button
                 onClick={scrollToBottom}
