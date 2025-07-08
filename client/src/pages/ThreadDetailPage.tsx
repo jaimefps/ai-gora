@@ -1040,7 +1040,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
 
   return (
     <div className="chat-container">
-      <div className="card">
+      <div className="card chat-stream">
         <div
           style={{
             display: "flex",
@@ -1150,6 +1150,13 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               fontSize: "0.875rem",
               color: "var(--text-primary)",
               lineHeight: 1.4,
+
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "100%",
             }}
           >
             <span
@@ -1162,6 +1169,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               Topic:
             </span>
             {thread.topic}
+            <span>more</span>
           </div>
         </div>
 
@@ -1290,10 +1298,32 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         )}
       </div>
 
-      {/* conditionally render this based on whether the app is paused */}
-      <div className="card chat-drawer">
-        <h3>Intervene</h3>
-      </div>
+      {/* Only show drawer when thread is paused */}
+      {isPaused && (
+        <div className="card chat-drawer">
+          <h3>Chat Controls</h3>
+          <button
+            onClick={handleResume}
+            disabled={isOperating}
+            style={{
+              marginTop: "auto",
+              backgroundColor: "var(--accent)",
+              color: "white",
+              border: "none",
+              padding: "0.75rem",
+              borderRadius: "6px",
+              fontSize: "0.875rem",
+              fontWeight: "bold",
+              cursor: isOperating ? "not-allowed" : "pointer",
+              opacity: isOperating ? 0.5 : 1,
+              alignSelf: "stretch",
+              boxSizing: "border-box",
+            }}
+          >
+            ▶️ Resume
+          </button>
+        </div>
+      )}
 
       {selectedPersona && (
         <PersonaModal
