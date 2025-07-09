@@ -89,6 +89,14 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   )
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null)
 
+  const someAsleep =
+    thread?.stream.filter((evt) => evt.type === "AckSchema")?.length !==
+    thread?.stream.filter(
+      (evt) => evt.type === "LoadMarker" && evt.loading === "AckSchema"
+    )?.length
+  const movedToVote = thread?.stream.find((evt) => evt.type === "SummarySchema")
+  const disablePause = someAsleep || movedToVote
+
   const loadThread = useCallback(
     async (showLoading = true) => {
       try {
@@ -1213,7 +1221,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               })}
             </div>
             {/* Floating pause button */}
-            {isActive && (
+            {isActive && !disablePause && (
               <button
                 onClick={handlePause}
                 disabled={isOperating}
@@ -1315,6 +1323,126 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       {isPaused && (
         <div className="card chat-drawer">
           <h3 style={{ marginBottom: "1rem" }}>Chat Controls</h3>
+
+          <div
+            className="personas-stack"
+            style={{
+              marginBottom: "1rem",
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border)",
+              borderRadius: "8px",
+              padding: "1rem",
+              width: "100%",
+            }}
+          >
+            <h4
+              style={{
+                margin: "0 0 1rem 0",
+                fontSize: "0.875rem",
+                fontWeight: "600",
+                color: "var(--text-primary)",
+              }}
+            >
+              Speaking Queue
+            </h4>
+            <div
+              style={{
+                backgroundColor: "var(--bg-tertiary)",
+                border: "1px solid var(--border)",
+                borderRadius: "6px",
+                maxHeight: "6rem",
+                overflowY: "auto",
+                fontSize: "0.75rem",
+                width: "100%",
+              }}
+            >
+              {thread.stack.map((personaId, index) => {
+                const persona = personas.find((p) => p.personaId === personaId)
+                const personaName = persona ? persona.name : "Unknown"
+
+                return (
+                  <div
+                    key={personaId}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0.5rem 0.75rem",
+                      borderBottom:
+                        index < thread.personas.length - 1
+                          ? "1px solid var(--border)"
+                          : "none",
+                      position: "relative",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--text-muted)",
+                          fontWeight: "500",
+                          minWidth: "1.5rem",
+                        }}
+                      >
+                        {index + 1}.
+                      </span>
+                      <span
+                        style={{
+                          color: "var(--text-primary)",
+                          fontWeight: "500",
+                          cursor: persona ? "pointer" : "default",
+                          textDecoration: persona ? "underline" : "none",
+                          textDecorationColor: "transparent",
+                          transition: "text-decoration-color 0.2s ease",
+                        }}
+                        onClick={() => {
+                          if (persona) {
+                            setSelectedPersona(persona)
+                          }
+                        }}
+                        onMouseEnter={(e) => {
+                          if (persona) {
+                            e.currentTarget.style.textDecorationColor =
+                              "var(--text-primary)"
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (persona) {
+                            e.currentTarget.style.textDecorationColor =
+                              "transparent"
+                          }
+                        }}
+                      >
+                        {personaName}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--text-muted)",
+                          fontFamily: "monospace",
+                          fontSize: "0.7rem",
+                        }}
+                      >
+                        #{personaId.slice(-6)}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
 
           {/* Intervention Form */}
           <div

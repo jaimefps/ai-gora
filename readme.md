@@ -15,8 +15,8 @@ Let lose some bots to argue over whatever topic.
 ### soon
 
 - feed each persona their own previous secret_thoughts
-- remove cancelled LoadMarkers when a Pause is added to stream
 - visual aid to see the thread stack, length, next, etc
+- remove cancelled LoadMarkers when a Pause is added to stream
 - introduce AllowMarkers for locking operations
 - configure types of voting, instead of only one type
 - users can manage the turn stack
