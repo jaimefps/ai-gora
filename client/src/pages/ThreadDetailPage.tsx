@@ -1598,6 +1598,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       {selectedPersona && (
         <PersonaModal
           persona={selectedPersona}
+          threads={[]}
           onClose={() => setSelectedPersona(null)}
         />
       )}

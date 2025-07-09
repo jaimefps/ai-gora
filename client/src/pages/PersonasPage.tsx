@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
-import type { Persona } from '../types';
+import type { Persona, Thread } from '../types';
 import { PersonaModal } from '../components/PersonaModal';
 import { CreatePersonaModal } from '../components/CreatePersonaModal';
 import { CreateThreadModal } from '../components/CreateThreadModal';
@@ -8,38 +8,51 @@ import { router } from '../router';
 
 export const PersonasPage: React.FC = () => {
   const [personas, setPersonas] = useState<Persona[]>([]);
+  const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPersona, setSelectedPersona] = useState<Persona | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showCreateThreadModal, setShowCreateThreadModal] = useState(false);
 
   useEffect(() => {
-    loadPersonas();
+    loadData();
   }, []);
 
   // Polling effect for real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      loadPersonas(false);
+      loadData(false);
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const loadPersonas = async (showLoading = true) => {
+  const loadData = async (showLoading = true) => {
     try {
       if (showLoading) {
         setLoading(true);
       }
-      const data = await api.getPersonas();
-      setPersonas(data);
+      const [personasData, threadsData] = await Promise.all([
+        api.getPersonas(),
+        api.getThreads()
+      ]);
+      setPersonas(personasData);
+      setThreads(threadsData);
     } catch (error) {
-      console.error('Failed to load personas:', error);
+      console.error('Failed to load data:', error);
     } finally {
       if (showLoading) {
         setLoading(false);
       }
     }
+  };
+
+  const loadPersonas = async (showLoading = true) => {
+    await loadData(showLoading);
+  };
+
+  const getThreadCountForPersona = (personaId: string) => {
+    return threads.filter(thread => thread.personas.includes(personaId)).length;
   };
 
   const handleCreatePersona = async (persona: { name: string; sys: string }) => {
@@ -150,44 +163,66 @@ export const PersonasPage: React.FC = () => {
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: '1.5rem'
         }}>
-          {personas.map((persona) => (
-            <div 
-              key={persona.personaId}
-              className="card clickable"
-              onClick={() => setSelectedPersona(persona)}
-            >
-              <h3 style={{ 
-                fontSize: '1.25rem', 
-                marginBottom: '0.5rem',
-                fontWeight: 600
-              }}>
-                {persona.name}
-              </h3>
-              <p style={{ 
-                color: 'var(--text-secondary)',
-                fontSize: '0.875rem',
-                marginBottom: '1rem'
-              }}>
-                ID: {persona.personaId}
-              </p>
-              <p style={{ 
-                color: 'var(--text-muted)',
-                fontSize: '0.875rem',
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical'
-              }}>
-                {persona.sys.substring(0, 150)}...
-              </p>
-            </div>
-          ))}
+          {personas.map((persona) => {
+            const threadCount = getThreadCountForPersona(persona.personaId);
+            return (
+              <div 
+                key={persona.personaId}
+                className="card clickable"
+                onClick={() => setSelectedPersona(persona)}
+              >
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  marginBottom: '0.5rem'
+                }}>
+                  <h3 style={{ 
+                    fontSize: '1.25rem', 
+                    marginBottom: 0,
+                    fontWeight: 600
+                  }}>
+                    {persona.name}
+                  </h3>
+                  <div style={{
+                    backgroundColor: 'var(--bg-tertiary)',
+                    color: 'var(--text-secondary)',
+                    padding: '0.25rem 0.5rem',
+                    borderRadius: '12px',
+                    fontSize: '0.75rem',
+                    fontWeight: '500',
+                    border: '1px solid var(--border)'
+                  }}>
+                    {threadCount} thread{threadCount !== 1 ? 's' : ''}
+                  </div>
+                </div>
+                <p style={{ 
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.875rem',
+                  marginBottom: '1rem'
+                }}>
+                  ID: {persona.personaId}
+                </p>
+                <p style={{ 
+                  color: 'var(--text-muted)',
+                  fontSize: '0.875rem',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical'
+                }}>
+                  {persona.sys.substring(0, 150)}...
+                </p>
+              </div>
+            );
+          })}
         </div>
       )}
 
       {selectedPersona && (
         <PersonaModal 
           persona={selectedPersona}
+          threads={threads}
           onClose={() => setSelectedPersona(null)}
         />
       )}
