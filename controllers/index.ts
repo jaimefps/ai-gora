@@ -264,7 +264,7 @@ const format = {
   username(name: string, id: string) {
     return `${name} (id:${id})`
   },
-  thread(threadId: string) {
+  thread(threadId: string, selfId?: string) {
     const t = store.threads[threadId]
     return t.stream
       .filter((evt) => {
@@ -286,6 +286,14 @@ const format = {
         ------------------------------
         ${this.username(name, id)}: 
         ${evt.payload.public_response ?? "(nothing to add at this time)"}
+        
+        ${
+          selfId &&
+          store.personas[selfId] &&
+          `<YOUR_PRIVATE_REASONING>
+            ${evt.payload.secret_thoughts}
+          </YOUR_PRIVATE_REASONING>`
+        }
         ------------------------------
         `
       })
@@ -351,6 +359,12 @@ const compose = {
       Your sole purpose is to assist with summaries, analysis, structure, and 
       operational tasks that help maintain order and clarity in the discussion.
     </PERSONALITY>
+    <FINAL_REMINDER>
+      DO NOT wrap the output in code blocks, backticks, or any extra formatting.
+      DO NOT explain or preface the output.
+      ONLY return raw, valid JSON that strictly conforms to the schemas.
+      Any deviation will result in the message being ignored.
+    </FINAL_REMINDER>
     `
   },
   persona(botId: string, persona: Persona, topic: string) {
@@ -383,9 +397,15 @@ const compose = {
       )}":
       ${persona.sys}
     </PERSONALITY>
+    <FINAL_REMINDER>
+      DO NOT wrap the output in code blocks, backticks, or any extra formatting.
+      DO NOT explain or preface the output.
+      ONLY return raw, valid JSON that strictly conforms to the schemas.
+      Any deviation will result in the message being ignored.
+    </FINAL_REMINDER>
     `
   },
-  prompt(threadId: string, schema: SchemaName) {
+  prompt(threadId: string, schema: SchemaName, selfId?: string) {
     switch (schema) {
       case "AckSchema": {
         return `
@@ -400,7 +420,7 @@ const compose = {
           ${schema}
         </RESPONSE_SCHEMA>
         <DISCUSSION_THREAD>
-          ${format.thread(threadId)}
+          ${format.thread(threadId, selfId)}
         </DISCUSSION_THREAD>
         `
       }
@@ -420,7 +440,7 @@ const compose = {
           ${schema}
         </RESPONSE_SCHEMA>
         <DISCUSSION_THREAD>
-          ${format.thread(threadId)}
+          ${format.thread(threadId, selfId)}
         </DISCUSSION_THREAD>
         <SUMMARY>
           Only use one of the vote_id's from 
@@ -514,8 +534,8 @@ function getSys(botId: string | typeof modKey, topic: string) {
   return compose.persona(botId, p, topic)
 }
 
-function getPrompt(threadId: string, schema: SchemaName) {
-  return compose.prompt(threadId, schema)
+function getPrompt(threadId: string, schema: SchemaName, selfId?: string) {
+  return compose.prompt(threadId, schema, selfId)
 }
 
 function getBotIds(threadId: string, op: SchemaName): string[] {
@@ -568,7 +588,7 @@ async function call(threadId: string) {
       const source = getBotSource(botId)
       const result = await provider[source](
         getSys(botId, t.topic),
-        getPrompt(threadId, op)
+        getPrompt(threadId, op, botId)
       )
 
       // note: TS sees JSON.parse() as `any`

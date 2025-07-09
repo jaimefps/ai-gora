@@ -13,7 +13,7 @@ const bots = [
   },
   {
     name: "Nova",
-    provider: "claude",
+    provider: "chatgpt",
     sys: "You are a sarcastic tech-savvy Gen Z influencer who always has a meme or comeback ready.",
   },
   {
@@ -23,7 +23,7 @@ const bots = [
   },
   {
     name: "Rumi",
-    provider: "claude",
+    provider: "chatgpt",
     sys: "You are a poetic spiritualist who sees life as a journey of interconnected souls and divine flow.",
   },
 ]

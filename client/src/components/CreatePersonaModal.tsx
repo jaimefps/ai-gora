@@ -1,57 +1,64 @@
-import React, { useState } from 'react';
-import { api } from '../api';
+import React, { useState } from "react"
+import { api } from "../api"
 
 interface CreatePersonaModalProps {
-  onClose: () => void;
-  onCreate: (persona: { name: string; sys: string; provider: string }) => void;
+  onClose: () => void
+  onCreate: (persona: { name: string; sys: string; provider: string }) => void
 }
 
-export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose, onCreate }) => {
-  const [name, setName] = useState('');
-  const [sys, setSys] = useState('');
-  const [provider, setProvider] = useState('chatgpt');
-  const [profileDraft, setProfileDraft] = useState('');
-  const [isExpanding, setIsExpanding] = useState(false);
+export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({
+  onClose,
+  onCreate,
+}) => {
+  const [name, setName] = useState("")
+  const [sys, setSys] = useState("")
+  const [provider, setProvider] = useState("chatgpt")
+  const [profileDraft, setProfileDraft] = useState("")
+  const [isExpanding, setIsExpanding] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (name.trim() && sys.trim()) {
-      onCreate({ name: name.trim(), sys: sys.trim(), provider });
+      onCreate({ name: name.trim(), sys: sys.trim(), provider })
     }
-  };
+  }
 
   const expandProfile = async () => {
-    if (!profileDraft.trim()) return;
-    
+    if (!profileDraft.trim()) return
+
     try {
-      setIsExpanding(true);
-      const result = await api.expandPersona(profileDraft);
-      setSys(result.result);
+      setIsExpanding(true)
+      const result = await api.expandPersona(profileDraft)
+      setSys(result.result)
     } catch (error) {
-      console.error('Failed to expand profile:', error);
+      console.error("Failed to expand profile:", error)
     } finally {
-      setIsExpanding(false);
+      setIsExpanding(false)
     }
-  };
+  }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Create New Persona</h2>
-          <button 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
+            Create New Persona
+          </h2>
+          <button
             onClick={onClose}
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              fontSize: '1.5rem'
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--text-secondary)",
+              cursor: "pointer",
+              fontSize: "1.5rem",
             }}
           >
             ×
@@ -59,12 +66,14 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '0.5rem',
-              fontWeight: 500
-            }}>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: 500,
+              }}
+            >
               Name *
             </label>
             <input
@@ -73,11 +82,11 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter persona name"
               required
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
+          {/* <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '0.5rem',
@@ -93,14 +102,16 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
               <option value="chatgpt">ChatGPT</option>
               <option value="claude">Claude</option>
             </select>
-          </div>
+          </div> */}
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '0.5rem',
-              fontWeight: 500
-            }}>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: 500,
+              }}
+            >
               Profile Draft (Optional)
             </label>
             <textarea
@@ -108,27 +119,29 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
               onChange={(e) => setProfileDraft(e.target.value)}
               placeholder="Describe the persona's personality, viewpoints, and style..."
               rows={3}
-              style={{ width: '100%', resize: 'vertical' }}
+              style={{ width: "100%", resize: "vertical" }}
             />
-            <div style={{ marginTop: '0.5rem' }}>
+            <div style={{ marginTop: "0.5rem" }}>
               <button
                 type="button"
                 onClick={expandProfile}
                 disabled={!profileDraft.trim() || isExpanding}
                 className="secondary"
-                style={{ fontSize: '0.875rem' }}
+                style={{ fontSize: "0.875rem" }}
               >
-                {isExpanding ? 'Expanding...' : 'AI Expand Profile'}
+                {isExpanding ? "Expanding..." : "AI Expand Profile"}
               </button>
             </div>
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '0.5rem',
-              fontWeight: 500
-            }}>
+          <div style={{ marginBottom: "2rem" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: 500,
+              }}
+            >
               System Prompt *
             </label>
             <textarea
@@ -137,15 +150,17 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
               placeholder="Enter the full system prompt for this persona..."
               rows={8}
               required
-              style={{ width: '100%', resize: 'vertical' }}
+              style={{ width: "100%", resize: "vertical" }}
             />
           </div>
 
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'flex-end',
-            gap: '1rem'
-          }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "1rem",
+            }}
+          >
             <button type="button" onClick={onClose}>
               Cancel
             </button>
@@ -156,5 +171,5 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
         </form>
       </div>
     </div>
-  );
-};
+  )
+}

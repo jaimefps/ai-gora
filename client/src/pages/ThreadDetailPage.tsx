@@ -1183,6 +1183,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
               textOverflow: "ellipsis",
               maxWidth: "100%",
             }}
+            title={thread.topic}
           >
             <span
               style={{
