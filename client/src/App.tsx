@@ -7,6 +7,8 @@ import { ThreadsPage } from "./pages/ThreadsPage"
 import { ThreadDetailPage } from "./pages/ThreadDetailPage"
 import { router } from "./router"
 import type { Route } from "./router"
+import { analytics } from "./firebase"
+import { logEvent } from "firebase/analytics"
 import "./App.css"
 
 export type Page = "home" | "personas" | "threads" | "thread-detail"
@@ -19,6 +21,20 @@ function App() {
   useEffect(() => {
     const unsubscribe = router.subscribe((route) => {
       setCurrentRoute(route)
+      
+      // Log page view to Firebase Analytics
+      logEvent(analytics, 'page_view', {
+        page_title: route.page,
+        page_location: window.location.href,
+        page_path: window.location.pathname
+      })
+    })
+
+    // Log initial page view
+    logEvent(analytics, 'page_view', {
+      page_title: currentRoute.page,
+      page_location: window.location.href,
+      page_path: window.location.pathname
     })
 
     return unsubscribe
