@@ -84,6 +84,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
   const [isOperating, setIsOperating] = useState(false)
   const [viewMode, setViewMode] = useState<"json" | "chat">("chat")
   const [personas, setPersonas] = useState<Persona[]>([])
+  const [threads, setThreads] = useState<Thread[]>([])
   const [expandedThoughts, setExpandedThoughts] = useState<Set<number>>(
     new Set()
   )
@@ -103,12 +104,14 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
         if (showLoading) {
           setLoading(true)
         }
-        const [threadData, personasData] = await Promise.all([
+        const [threadData, personasData, threadsData] = await Promise.all([
           api.getThread(threadId),
           api.getPersonas(),
+          api.getThreads(),
         ])
         setThread(threadData)
         setPersonas(personasData)
+        setThreads(threadsData)
       } catch (error) {
         console.error("Failed to load thread:", error)
       } finally {
@@ -1598,7 +1601,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
       {selectedPersona && (
         <PersonaModal
           persona={selectedPersona}
-          threads={[]}
+          threads={threads}
           onClose={() => setSelectedPersona(null)}
         />
       )}
