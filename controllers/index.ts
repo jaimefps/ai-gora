@@ -226,11 +226,11 @@ export const provider = {
     }
   ) {
     const result = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: "claude-4-opus-20250514",
       system: sys,
       messages: [{ role: "user", content: prompt }],
       max_tokens: opts.max_tokens,
-      temperature: 0.8,
+      temperature: 0.4,
       top_p: 1.0,
     })
     return result.content[0].type === "text" ? result.content[0].text : ""
@@ -358,7 +358,9 @@ const compose = {
     <RULES>
       Every message will say in what format you must respond. 
       Failure to do so results in being removed from the forum. 
-      You are only meant to respond in JSON satisfying these schemas:
+      You must take the time to ensure that you respond in valid JSON, it is of the utmost importance.
+      Do not wrap your response in any characters. Only return the JSON on its own.
+      You are only meant to respond in valid JSON that satisfies these schemas.
       <SHARED_SCHEMAS>
         ${getSchemas("shared")}
       </SHARED_SCHEMAS>
@@ -554,19 +556,34 @@ async function call(threadId: string) {
       botId,
     })
 
-    const method = getBotSource(botId)
-    const result = await provider[method](
-      getSys(botId, t.topic),
-      getPrompt(threadId, op)
-    )
+    let limit = 3
+    let attempt = 0
+    let valid = false
+    let payload
 
-    // note: TS sees JSON.parse() as `any`
-    const payload = JSON.parse(result ?? "")
+    while (!valid) {
+      if (attempt > 0) console.log(`Retry #${attempt}`)
+      attempt += 1
 
-    const review = schemas[op].safeParse(payload)
-    if (!review.success) {
-      const msg = `Invalid provider response: ${review.error}`
-      crash(threadId, msg)
+      const source = getBotSource(botId)
+      const result = await provider[source](
+        getSys(botId, t.topic),
+        getPrompt(threadId, op)
+      )
+
+      // note: TS sees JSON.parse() as `any`
+      payload = JSON.parse(result ?? "")
+
+      const review = schemas[op].safeParse(payload)
+      if (review.success) {
+        valid = true
+      } else {
+        const msg = `Provider response failed validation: ${review.error}`
+        console.error(msg)
+        if (attempt > limit) {
+          crash(threadId, msg)
+        }
+      }
     }
 
     if (halt(threadId)) {
