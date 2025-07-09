@@ -1519,7 +1519,7 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                     color: "var(--text-secondary)",
                   }}
                 >
-                  Message (public)
+                  Message (public)*
                 </label>
                 <textarea
                   value={message}
@@ -1527,8 +1527,8 @@ export const ThreadDetailPage: React.FC<ThreadDetailPageProps> = ({
                   placeholder="Your intervention message..."
                   style={{
                     width: "100%",
-                    minHeight: "10rem",
-                    maxHeight: "15rem",
+                    minHeight: "12rem",
+                    maxHeight: "12rem",
                     padding: "0.5rem",
                     border: "1px solid var(--border)",
                     borderRadius: "4px",

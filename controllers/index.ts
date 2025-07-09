@@ -2,9 +2,14 @@ import fs from "fs"
 import path from "path"
 import { z } from "zod"
 import OpenAI from "openai"
+import { Anthropic } from "@anthropic-ai/sdk"
 import * as schemas from "../schemas"
 
 const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
+
+const anthropic = new Anthropic({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
@@ -15,8 +20,6 @@ const openai = new OpenAI({
  * - enable retries if call schema response fails
  * - enforce uniqueness of useKey and modKey as names
  * - replace more types with zods and use to validate the REST layer
- * - prompt at the end of each loop if ready to vote? (could us a marker)
- * - drag & drop ui allows user to reorder the speakers stack
  */
 
 export const usrKey = "AIGORA_INTERNAL_USER" as const
@@ -149,6 +152,7 @@ export type Thread = {
 }
 
 export type Persona = {
+  provider?: keyof typeof provider
   name: string
   sys: string
 }
@@ -190,7 +194,7 @@ export const store: {
 }
 
 export const provider = {
-  async gpt(
+  async chatgpt(
     sys: string,
     prompt: string,
     opts = {
@@ -214,9 +218,25 @@ export const provider = {
     })
     return result.choices[0].message.content
   },
-  // async claude() {},
+  async claude(
+    sys: string,
+    prompt: string,
+    opts = {
+      max_tokens: 999,
+    }
+  ) {
+    const result = await anthropic.messages.create({
+      model: "claude-3-opus-20240229",
+      system: sys,
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: opts.max_tokens,
+      temperature: 0.8,
+      top_p: 1.0,
+    })
+    return result.content[0].type === "text" ? result.content[0].text : ""
+  },
   // async gemini() {},
-}
+} as const
 
 function save(threadId: string, folder: "dump_results" | "dump_errors") {
   const t = store.threads[threadId]
@@ -504,6 +524,12 @@ function getBotIds(threadId: string, op: SchemaName): string[] {
   return [botId]
 }
 
+function getBotSource(botId: string): NonNullable<Persona["provider"]> {
+  const p = store.personas[botId]
+  if (p) return p.provider ?? "chatgpt"
+  return "chatgpt"
+}
+
 /**
  * @param threadId - self explanatory
  * @param botId - personaId OR modKey
@@ -528,7 +554,8 @@ async function call(threadId: string) {
       botId,
     })
 
-    const result = await provider.gpt(
+    const method = getBotSource(botId)
+    const result = await provider[method](
       getSys(botId, t.topic),
       getPrompt(threadId, op)
     )

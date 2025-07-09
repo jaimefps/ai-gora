@@ -47,3 +47,5 @@ coverage/
 tmp/
 temp/
 secrets/
+dump_results/
+dump_errors/

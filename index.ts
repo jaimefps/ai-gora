@@ -136,8 +136,9 @@ app.get("/personas/:personaId", (req, res) => {
 app.post("/personas", (req, res) => {
   try {
     const personaId = String(Date.now())
-    const { name, sys } = req.body
+    const { name, sys, provider } = req.body
     store.personas[personaId] = {
+      provider: provider ?? "chatgpt",
       name,
       sys,
     }
@@ -217,7 +218,7 @@ app.post("/expand/persona", async (req, res) => {
   `
   try {
     const { profile } = req.body
-    const result = await provider.gpt(sys, profile, {
+    const result = await provider.chatgpt(sys, profile, {
       max_tokens: 999,
     })
     res.json({ result })
@@ -246,7 +247,7 @@ app.post("/expand/topic", async (req, res) => {
   `
   try {
     const { topic } = req.body
-    const result = await provider.gpt(sys, topic, {
+    const result = await provider.chatgpt(sys, topic, {
       max_tokens: 999,
     })
     res.json({ result })

@@ -2,6 +2,14 @@
     "ignore": [
         "test",
         "dump_results",
-        "node_modules"
+        "dump_errors",
+        "node_modules",
+        "client",
+        ".claude",
+        ".firebase",
+        ".vscode",
+        "dist",
+        "readme.md",
+        "yarn.lock"
     ]
 }

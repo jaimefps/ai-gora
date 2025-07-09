@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.56.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/lodash.shuffle": "^4.2.9",
