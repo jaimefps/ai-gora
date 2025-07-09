@@ -42,6 +42,7 @@ async function run() {
       })
       console.log(`Expanded system prompt for ${p.name}`)
       const pResp = await axios.post(`${API}/personas`, {
+        provider: p.provider,
         sys: expResp.data.result,
         name: p.name,
       })
