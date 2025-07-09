@@ -96,7 +96,8 @@ button.secondary {
 }
 
 input,
-textarea {
+textarea,
+select {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -107,7 +108,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-color: var(--accent);

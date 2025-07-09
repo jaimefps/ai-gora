@@ -2,6 +2,7 @@ export interface Persona {
   personaId: string;
   name: string;
   sys: string;
+  provider: string;
 }
 
 export interface Thread {

@@ -3,19 +3,20 @@ import { api } from '../api';
 
 interface CreatePersonaModalProps {
   onClose: () => void;
-  onCreate: (persona: { name: string; sys: string }) => void;
+  onCreate: (persona: { name: string; sys: string; provider: string }) => void;
 }
 
 export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose, onCreate }) => {
   const [name, setName] = useState('');
   const [sys, setSys] = useState('');
+  const [provider, setProvider] = useState('chatgpt');
   const [profileDraft, setProfileDraft] = useState('');
   const [isExpanding, setIsExpanding] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && sys.trim()) {
-      onCreate({ name: name.trim(), sys: sys.trim() });
+      onCreate({ name: name.trim(), sys: sys.trim(), provider });
     }
   };
 
@@ -74,6 +75,24 @@ export const CreatePersonaModal: React.FC<CreatePersonaModalProps> = ({ onClose,
               required
               style={{ width: '100%' }}
             />
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              fontWeight: 500
+            }}>
+              Provider *
+            </label>
+            <select
+              value={provider}
+              onChange={(e) => setProvider(e.target.value)}
+              style={{ width: '100%' }}
+            >
+              <option value="chatgpt">ChatGPT</option>
+              <option value="claude">Claude</option>
+            </select>
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>

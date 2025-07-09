@@ -10,7 +10,7 @@ const openai = new OpenAI({
 })
 
 const anthropic = new Anthropic({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
 /**
