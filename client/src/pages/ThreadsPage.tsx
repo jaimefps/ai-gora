@@ -106,15 +106,15 @@ export const ThreadsPage: React.FC<ThreadsPageProps> = ({ onNavigate }) => {
               color: "var(--text-secondary)",
               borderColor: "var(--border)",
               backgroundColor: "transparent",
-              transition: "background-color 0.2s ease, border-color 0.2s ease"
+              transition: "background-color 0.2s ease, border-color 0.2s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--bg-tertiary)";
-              e.currentTarget.style.borderColor = "var(--text-muted)";
+              e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"
+              e.currentTarget.style.borderColor = "var(--text-muted)"
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.backgroundColor = "transparent"
+              e.currentTarget.style.borderColor = "var(--border)"
             }}
           >
             Create Persona
@@ -127,15 +127,15 @@ export const ThreadsPage: React.FC<ThreadsPageProps> = ({ onNavigate }) => {
               color: "var(--text-secondary)",
               borderColor: "var(--border)",
               backgroundColor: "transparent",
-              transition: "background-color 0.2s ease, border-color 0.2s ease"
+              transition: "background-color 0.2s ease, border-color 0.2s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--bg-tertiary)";
-              e.currentTarget.style.borderColor = "var(--text-muted)";
+              e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"
+              e.currentTarget.style.borderColor = "var(--text-muted)"
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.backgroundColor = "transparent"
+              e.currentTarget.style.borderColor = "var(--border)"
             }}
           >
             View Personas →
@@ -185,8 +185,10 @@ export const ThreadsPage: React.FC<ThreadsPageProps> = ({ onNavigate }) => {
                   WebkitLineClamp: 3,
                   WebkitBoxOrient: "vertical",
                 }}
+                title={thread.topic}
               >
-                {thread.topic.substring(0, 150)}...
+                {thread.topic.substring(0, 150)}
+                {thread.topic.length > 150 ? "..." : ""}
               </p>
               <p
                 style={{
